@@ -1,0 +1,5 @@
+0 0 2 2 resources/GameAssets/animations/idle/ahIdle.png dyn player
+100 350 3 3 resources/GameAssets/statickAssets/terrain/elka3.png sta elka
+100 0 3 3 resources/GameAssets/statickAssets/terrain/elka3.png sta elka
+50 12 3 3 resources/GameAssets/statickAssets/terrain/elka3.png sta elka
+200 50 3 3 resources/GameAssets/statickAssets/terrain/elka3.png sta elka
