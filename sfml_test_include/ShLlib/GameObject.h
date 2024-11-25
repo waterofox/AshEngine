@@ -18,6 +18,17 @@ namespace Game
 	};
 	class GameObject
 	{
+		private:
+		//obj
+		sf::Sprite objSprite; 
+		sf::Texture objTexture;
+		sf::Vector2f objMovement;
+		std::string name = "none";
+		//animation
+		bool isAnima = false;
+		int frameCount = 1;
+		float currentFrame = 0.f;
+		int framePerSeconds = 24;
 	public:
 
 		//move
@@ -38,6 +49,13 @@ namespace Game
 			this->objSprite = objB.objSprite;
 			this->objTexture = objB.objTexture;
 			this->setTexture(this->objTexture);
+
+			this->moveUp = objB.moveUp;
+			this->moveLeft = objB.moveLeft;
+			this->moveRight = objB.moveRight;
+			this->moveDown = objB.moveDown;
+
+			this->name = objB.name;
 			return *this;
 		}
 		~GameObject();
@@ -45,9 +63,14 @@ namespace Game
 		sf::Sprite getSFMlobj(); //возвращает SFML объект для отрисовки в окне
 		sf::Vector2f getPosition(); //Возвращает текущую позицию (левый верхний угол)
 		Sizef getSize(); //возвращается текущего sf::Sprite с учётом скейла
+		std::string gertName() { return this->name; }
 		//set
 		void setPosition(sf::Vector2f); //изменение позиции объекта
+		void setX(float newX);
+		void setY(float newY);
 		void setScale(sf::Vector2f); //изменение скейла
+		void setName(std::string name) { this->name = name; }
+
 		void setTexture(sf::Texture&); // переприсовение текстуры (оно тебе не нужно, это сугубо для удобства работы основного методв подгрузки текстуры)
 		void setCurrentFrame(int);//изменяет текущий кадр анимации
 		void setFrameCount(int); //изменяет кол-во кадров в анимации
@@ -55,6 +78,7 @@ namespace Game
 		void disableAnimation(); //отключает анимацию
 		void enableAnimation(); //включает анимацию
 		void updateTexture(std::string); //основной метод подгрузки текстуры
+		
 		void moveX(float plusX); //смещение объекта по Ox согласно заданному парметру
 		void moveY(float plusY); //смещение объекта по Oy согласно заданному парметру
 		void move(float plusX, float plusY);
@@ -62,15 +86,5 @@ namespace Game
 		bool isAnimated(); //Проверка на то, включена ли анимация 
 		//proc
 		void updateAnimation(sf::Time deltaTime); //метод который обновляет текущий кадр анимаци (считай проигрывает её)
-	private:
-		//obj
-		sf::Sprite objSprite; 
-		sf::Texture objTexture;
-		sf::Vector2f objMovement;
-		//animation
-		bool isAnima = false;
-		int frameCount = 1;
-		float currentFrame = 0.f;
-		int framePerSeconds = 24;
 	};
 }

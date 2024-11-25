@@ -1,5 +1,6 @@
-0 0 2 2 resources/GameAssets/animations/idle/ahIdle.png dyn player
-100 350 3 3 resources/GameAssets/statickAssets/terrain/elka3.png sta elka
-100 0 3 3 resources/GameAssets/statickAssets/terrain/elka3.png sta elka
-50 12 3 3 resources/GameAssets/statickAssets/terrain/elka3.png sta elka
-200 50 3 3 resources/GameAssets/statickAssets/terrain/elka3.png sta elka
+view_status: dynamic
+lay
+name: player X: 0 Y: 0 scale_x: 2 scale_y: 2 url: resources/GameAssets/animations/idle/ahIdle.png animated: true fps: 24 type: dynamic
+name: elka X: 100 Y: -10 scale_x: 2.5 scale_y: 2.5 url: resources/GameAssets/statickAssets/terrain/elka3.png animated: false fps: 24 type: static
+lay
+name: elka X: 0 Y: 0 scale_x: 3 scale_y: 3 url: resources/GameAssets/statickAssets/terrain/elka3.png animated: false fps: 24 type: static

@@ -19,9 +19,14 @@ void Game::GameScene::removeObject(std::string uniqueName)
 	dynamicObjects.erase(uniqueName);
 }
 
-Game::GameObject& Game::GameScene::getObject(std::string uniqueName)
+bool Game::GameScene::getObject(std::string uniqueName, Game::GameObject*& buffer)
 {
-	return dynamicObjects[uniqueName];
+	if (dynamicObjects.find(uniqueName) != dynamicObjects.end())
+	{
+		buffer = &dynamicObjects[uniqueName];
+		return true;
+	}
+	else { return false; }
 }
 
 void Game::GameScene::sceneAnimationsUpdate(sf::Time deltaTime)

@@ -1,4 +1,5 @@
 #pragma once
+#define PLAYER_SPEED 150
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include "ShLlib/GameScene.h"
@@ -17,7 +18,7 @@ private:
 	sf::RenderWindow window;
 	sf::View camera;
 	//game fields
-	Game::GameScene* scene = nullptr;
+	std::vector<Game::GameScene>* scene = nullptr;
 	
 public:
 //work staff
@@ -27,10 +28,10 @@ public:
 	void render();
 	void playerInput(sf::Keyboard::Key,bool isPressed);
 	bool loadScene(std::string path);
+	bool getObject(std::string name, Game::GameObject*& buffer);
 //important staff
 	//constructors
 	GameClass(){
-		scene = new Game::GameScene;
 		loadScene("resources/scenes/testScene.txt");
 		camera.setSize(sf::Vector2f(640,480));
 	}
@@ -38,12 +39,14 @@ public:
 	~GameClass() { delete scene; }
 
 	//scripts
-	void controlScript(Game::GameObject& obj)
+	void controlScript()
 	{
-		if (obj.moveRight) { obj.moveX(100 * fixedDeltaTime.asSeconds()); }
-		if (obj.moveLeft) { obj.moveX(-100 * fixedDeltaTime.asSeconds()); }
-		if (obj.moveUp) { obj.moveY(-100 * fixedDeltaTime.asSeconds()); }
-		if (obj.moveDown) { obj.moveY(100 * fixedDeltaTime.asSeconds()); }
+		Game::GameObject* obj = nullptr;
+		this->getObject("player", obj);
+		if (obj->moveRight) { obj->moveX(PLAYER_SPEED * fixedDeltaTime.asSeconds()); }
+		if (obj->moveLeft) { obj->moveX(-1*PLAYER_SPEED * fixedDeltaTime.asSeconds()); }
+		if (obj->moveUp) { obj->moveY(-1 *PLAYER_SPEED * fixedDeltaTime.asSeconds()); }
+		if (obj->moveDown) { obj->moveY(PLAYER_SPEED *fixedDeltaTime.asSeconds()); }
 	}
 };
 

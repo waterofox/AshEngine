@@ -14,7 +14,7 @@ Game::GameObject::GameObject(const GameObject& objB)
 }
 GameObject::~GameObject() {}
 sf::Sprite GameObject::getSFMlobj() { return objSprite; }
-sf::Vector2f GameObject::getPosition() { return objSprite.getPosition(); }
+sf::Vector2f GameObject::getPosition() { return objSprite.getGlobalBounds().getPosition(); }
 Sizef GameObject::getSize()
 {
 	Sizef objectSizef;
@@ -26,6 +26,18 @@ void GameObject::setPosition(sf::Vector2f newPosition)
 { 
 	objSprite.setPosition(newPosition);
 	objMovement = newPosition;
+}
+void Game::GameObject::setX(float newX)
+{
+	sf::Vector2f newPos = this->getPosition();
+	newPos.x = newX;
+	this->setPosition(newPos);
+}
+void Game::GameObject::setY(float newY)
+{
+	sf::Vector2f newPos = this->getPosition();
+	newPos.y = newY;
+	this->setPosition(newPos);
 }
 void GameObject::setScale(sf::Vector2f newScale) { objSprite.setScale(newScale); }
 void GameObject::setFrameCount(int newFrameCount) { frameCount = newFrameCount; }
