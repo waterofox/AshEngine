@@ -1,10 +1,12 @@
 #include "GameClass.h"
 void GameClass::run()
 {
-	window.create(sf::VideoMode(640, 480), "GameClassWindow");
-	window.setFramerateLimit(120);
+	window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "GameClassWindow");
+	window.setFramerateLimit(FPS);
+
 	window.setVerticalSyncEnabled(true);
 	window.setKeyRepeatEnabled(false);
+
 	while (window.isOpen())
 	{
 		eventHandling();
@@ -67,7 +69,7 @@ void GameClass::render()
 void GameClass::playerInput(sf::Keyboard::Key key, bool isPressed)
 {
 	Game::GameObject* player = nullptr;
-	this->getObject("player", player);
+	if (!this->getObject("player", player)) { return; };
 	switch (key)
 	{
 	case sf::Keyboard::D: {player->moveRight = isPressed; }break;
@@ -140,7 +142,13 @@ bool GameClass::loadScene(std::string path)
 		{
 			sceneFile >> value;
 			if (value == "true") { newObj.enableAnimation(); }
-			else { newObj.disableAnimation(); }
+			else if(value == "false"){ newObj.disableAnimation(); }
+			else
+			{
+				sceneFile.close();
+				std::cout << "SCENE_ERRRO: incorrect value of key <<  " << key << '\n';
+				return false;
+			}
 		}
 		else if (key == "fps:")
 		{
@@ -154,11 +162,23 @@ bool GameClass::loadScene(std::string path)
 			{
 				(*scene)[layIndex].addObject(newObj.gertName(), newObj, Game::objectType::dynamicType);
 			}
-			else
+			else if(value == "static")
 			{
 				(*scene)[layIndex].addObject(newObj.gertName(), newObj, Game::objectType::staticType);
 			}
-		}		
+			else
+			{
+				sceneFile.close();
+				std::cout << "SCENE_ERRRO: incorrect value of key <<  " << key << '\n';
+				return false;
+			}
+		}
+		else
+		{
+			sceneFile.close();
+			std::cout << "SCENE_ERRRO: incorrect key <<  " << key << '\n';
+			return false;
+		}
 	}
 
 	sceneFile.close();

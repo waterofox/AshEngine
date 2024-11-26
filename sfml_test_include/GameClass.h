@@ -1,5 +1,9 @@
 #pragma once
 #define PLAYER_SPEED 150
+#define FPS 60
+#define WINDOW_HEIGHT 480
+#define WINDOW_WIDTH 640
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include "ShLlib/GameScene.h"
@@ -11,7 +15,7 @@ private:
 	//processing fields
 	sf::Clock clock;
 	sf::Time timeSinceLastUodate = sf::Time::Zero;
-	sf::Time fixedDeltaTime = sf::seconds(1.6 / 60.f);
+	sf::Time fixedDeltaTime = sf::seconds(1.6 / FPS);
 
 	sf::Event actualEvent;
 	sf::Keyboard::Key key;
@@ -42,7 +46,7 @@ public:
 	void controlScript()
 	{
 		Game::GameObject* obj = nullptr;
-		this->getObject("player", obj);
+		if (!this->getObject("player", obj)) {return;}
 		if (obj->moveRight) { obj->moveX(PLAYER_SPEED * fixedDeltaTime.asSeconds()); }
 		if (obj->moveLeft) { obj->moveX(-1*PLAYER_SPEED * fixedDeltaTime.asSeconds()); }
 		if (obj->moveUp) { obj->moveY(-1 *PLAYER_SPEED * fixedDeltaTime.asSeconds()); }
