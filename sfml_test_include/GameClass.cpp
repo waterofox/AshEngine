@@ -65,7 +65,7 @@ void GameClass::update()
 	std::vector<script>& actualScrits = scripts[sceneName];
 	for (auto& scriptPtr : actualScrits)
 	{
-		(this->*scriptPtr)();
+		scriptPtr(this);
 	}
 }
 
@@ -206,6 +206,7 @@ bool GameClass::loadScene(std::string path)
 		}
 	}
 	sceneFile.close();
+	isSceneReady = true;
 	return true;
 
 }
@@ -220,4 +221,15 @@ bool GameClass::getObject(std::string name, Game::GameObject*& buffer)
 		}
 	}
 	return false;
+}
+
+void GameClass::addScript(std::string sceneName, script scriptPtr)
+{
+	std::vector<script>& actualScripts = scripts[sceneName];
+	actualScripts.push_back(scriptPtr);
+}
+
+Game::GameObject*& GameClass::getVessel()
+{
+	return buferObject;
 }
