@@ -9,8 +9,11 @@
 #include "ShLlib/GameScene.h"
 #include <iostream>
 #include <fstream>
+#include<vector>
+#include<map>
 class GameClass
 {
+	using script = void(GameClass::*)();
 private:
 	//processing fields
 	sf::Clock clock;
@@ -21,9 +24,14 @@ private:
 	sf::Keyboard::Key key;
 	sf::RenderWindow window;
 	sf::View camera;
-	//game fields
+	//game scene
 	std::vector<Game::GameScene>* scene = nullptr;
-	
+	std::string sceneName = "";
+	bool dynamicCamera = false;
+	bool isSceneReady = false;
+	//game scripts
+	std::map<std::string, std::vector<script>> scripts;
+
 public:
 //work staff
 	void run();
@@ -36,8 +44,11 @@ public:
 //important staff
 	//constructors
 	GameClass(){
-		loadScene("resources/scenes/testScene.txt");
-		camera.setSize(sf::Vector2f(640,480));
+		isSceneReady =  loadScene("resources/scenes/testScene.txt");
+		std::vector<script> jopa;
+		jopa.push_back(&GameClass::controlScript);
+		scripts.insert(std::pair<std::string, std::vector<script>>(sceneName, jopa));
+		camera.setSize(sf::Vector2f(WINDOW_WIDTH,WINDOW_HEIGHT));
 	}
 	//destructors
 	~GameClass() { delete scene; }

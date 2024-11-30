@@ -1,3 +1,4 @@
+scene: test
 view_status: dynamic
 lay
 name: player X: 0 Y: 0 scale_x: 2 scale_y: 2 url: resources/GameAssets/animations/idle/ahIdle.png animated: true fps: 24 type: dynamic

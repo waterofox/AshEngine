@@ -7,17 +7,26 @@ void GameClass::run()
 	window.setVerticalSyncEnabled(true);
 	window.setKeyRepeatEnabled(false);
 
+	//main game loop
+
 	while (window.isOpen())
 	{
-		eventHandling();
-		timeSinceLastUodate += clock.restart();
-		while (timeSinceLastUodate > fixedDeltaTime)
+		if (isSceneReady)
 		{
-			timeSinceLastUodate -= fixedDeltaTime;
 			eventHandling();
-			update();
+			timeSinceLastUodate += clock.restart();
+			while (timeSinceLastUodate > fixedDeltaTime)
+			{
+				timeSinceLastUodate -= fixedDeltaTime;
+				eventHandling(); //keyboard/mouse event catch
+				update(); // update gamelogic and prerender
+			}
+			render(); //render
 		}
-		render();
+		else
+		{
+			//todo ожидание загрузки сцены
+		}
 	}
 }
 
@@ -39,19 +48,25 @@ void GameClass::eventHandling()
 
 void GameClass::update()
 {
+	//update camera position (target of player)
 	Game::GameObject* player = nullptr;
-	this->getObject("player", player);
-	sf::Vector2f playerPosition = player->getPosition();
-	Game::Sizef playerSize = player->getSize();
-
-	camera.setCenter(sf::Vector2f(playerPosition.x + (playerSize.width/2),playerPosition.y + (playerSize.height/2)));
-
+	if (this->getObject("player", player))
+	{
+		sf::Vector2f playerPosition = player->getPosition();
+		Game::Sizef playerSize = player->getSize();
+		camera.setCenter(sf::Vector2f(playerPosition.x + (playerSize.width / 2), playerPosition.y + (playerSize.height / 2)));
+	}
+	//update animations on scene
 	for (auto lay = scene->begin(); lay < scene->end(); ++lay)
 	{
 		lay->sceneAnimationsUpdate(fixedDeltaTime);
 	}
-	//вызов скриптов
-	controlScript();
+	//scripts
+	std::vector<script>& actualScrits = scripts[sceneName];
+	for (auto& scriptPtr : actualScrits)
+	{
+		(this->*scriptPtr)();
+	}
 }
 
 void GameClass::render()
@@ -86,6 +101,7 @@ bool GameClass::loadScene(std::string path)
 	std::ifstream sceneFile(path);
 	if (!sceneFile.is_open()) { return false; }
 	if (scene != nullptr) { delete scene; }
+	isSceneReady = false;
 	scene = new std::vector<Game::GameScene>;
 	Game::GameObject newObj;
 	std::string key;
@@ -98,9 +114,18 @@ bool GameClass::loadScene(std::string path)
 		if (key == "view_status:")
 		{
 			sceneFile >> value;
-			if (value == "dynamic") {} //todo set
-			else if (value == "static") {}//todo set
-			else {}//todo error output
+			if (value == "dynamic") { dynamicCamera = true; } 
+			else if (value == "static") { dynamicCamera = false; }
+			else 
+			{
+				std::cout << "SCENE_ERRRO: incorrect value of key <<  " << key << '\n';
+				return false;
+			}
+		}
+		else if(key == "scene:")
+		{
+			sceneFile >> value;
+			sceneName = value;
 		}
 		else if (key == "lay")
 		{
@@ -180,7 +205,6 @@ bool GameClass::loadScene(std::string path)
 			return false;
 		}
 	}
-
 	sceneFile.close();
 	return true;
 
