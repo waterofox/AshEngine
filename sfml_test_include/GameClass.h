@@ -8,59 +8,72 @@
 #include<vector>
 #include<map>
 
+
+//дефайны дл€ упращени€ работы с движком:
 #define DELTA_TIME GAME->getDeltaTime()
 #define OBJECT GAME->getVessel()
 #define GAME_POINTER GameClass* GAME
 
 class GameClass
 {
+	//тип дл€ скриптов:
 	using script = void(*)(GameClass*);
+
+	//тип дл€ инструкций обработки:
+	using instruction = void(*)(GameClass*, Game::GameObject*);
 private:
-	//processing fields
+	//пол€ дл€ контрол€ игровых тиков:
 	sf::Clock clock;
 	sf::Time timeSinceLastUodate = sf::Time::Zero;
 	sf::Time fixedDeltaTime = sf::Time::Zero;
 	int framePerSeconds = 60;
 
+	//пол€ дл€ отлеживание сист.событий
 	sf::Event actualEvent;
 	sf::Keyboard::Key key;
 
-	sf::RenderWindow window;
-	sf::View camera;
-
-	Game::GameObject* buferObject = nullptr;
+	sf::RenderWindow window; //основное окно
+	unsigned int width;
+	unsigned int height;
 
 	//game scene
 	std::vector<Game::GameScene>* scene = nullptr;
 	std::string sceneName = "";
-	bool dynamicCamera = false;
 	bool isSceneReady = false;
 
-	unsigned int width;
-	unsigned int height;
+	sf::View camera; //камера todo: подумать над тем, чтобы сделать камеру опциональным объектом
+	bool dynamicCamera = false;
+
+	Game::GameObject* buferObject = nullptr; // дл€ подт€гивани€ объектов (сосуд посути)
+
 	//game scripts
 	std::map<std::string, std::vector<script>> scripts;
 
 public:
-//work staff
+	//sfml classic methods
 	void run();
 	void eventHandling();
 	void update();
 	void render();
-	void playerInput(sf::Keyboard::Key,bool isPressed);
+
+	void playerInput(sf::Keyboard::Key,bool isPressed); //todo нужно подумать над тем, как сделать эту штуку настраеваемой (может вооьще сделать в виде указател€ на метод)
+
+
 	bool loadScene(std::string path);
 
 	bool getObject(std::string name, Game::GameObject*& buffer);
+	Game::GameObject*& getVessel();
+
 	void addScript(std::string sceneName, script scriptPtr);
 
-	Game::GameObject*& getVessel();
 	sf::Vector2u getWindowSize();
+	
 	sf::Time getDeltaTime();
 //important staff
 	//constructors
 	GameClass(unsigned int width, unsigned int height,unsigned int fps)
 	{
-		camera.setSize(sf::Vector2f(width,height));
+		this->camera.setSize(sf::Vector2f(width,height));
 		this->width = width;
 		this->height = height;
 		this->framePerSeconds = fps;
