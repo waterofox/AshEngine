@@ -1,8 +1,8 @@
 #include "GameClass.h"
 void GameClass::run()
 {
-	window.create(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "GameClassWindow");
-	window.setFramerateLimit(FPS);
+	window.create(sf::VideoMode(width, height), "GameClassWindow");
+	window.setFramerateLimit(framePerSeconds);
 
 	window.setVerticalSyncEnabled(true);
 	window.setKeyRepeatEnabled(false);
@@ -232,4 +232,14 @@ void GameClass::addScript(std::string sceneName, script scriptPtr)
 Game::GameObject*& GameClass::getVessel()
 {
 	return buferObject;
+}
+
+sf::Vector2u GameClass::getWindowSize()
+{
+	return sf::Vector2u(width,height);
+}
+
+sf::Time GameClass::getDeltaTime()
+{
+	return this->fixedDeltaTime;
 }

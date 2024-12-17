@@ -1,9 +1,8 @@
 
 #include "GameClass.h"
 #include <iostream>
-#define OBJECT GAME->getVessel()
 
-void controlScript(GameClass* GAME)
+void controlScript(GAME_POINTER)
 {
 	if (!GAME->getObject("player", OBJECT)) { return; }
 	if (OBJECT->moveRight) { OBJECT->moveX(150 * DELTA_TIME.asSeconds()); }
@@ -15,7 +14,7 @@ void controlScript(GameClass* GAME)
 
 int main() 
 {
-	GameClass game;
+	GameClass game(640,480,60);
 	game.addScript("test", controlScript);
 	game.loadScene("resources/scenes/testScene.txt");
 	game.run();

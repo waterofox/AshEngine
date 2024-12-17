@@ -1,7 +1,27 @@
 scene: test
 view_status: dynamic
 lay
-name: player X: 0 Y: 0 scale_x: 2 scale_y: 2 url: resources/GameAssets/animations/idle/ahIdle.png animated: true fps: 24 type: dynamic
-name: elka X: 100 Y: -10 scale_x: 2.5 scale_y: 2.5 url: resources/GameAssets/statickAssets/terrain/elka3.png animated: false fps: 24 type: static
+name: r X: 256 Y: 120 scale_x: 2 scale_y: 2.5 url: resources/GameAssets/statickAssets/terrain/roadH.png animated: false fps: 1 type: static
+name: r X: 128 Y: 120 scale_x: 2 scale_y: 2.5 url: resources/GameAssets/statickAssets/terrain/roadHV.png animated: false fps: 1 type: static
+name: r X: 0 Y: 120 scale_x: 2 scale_y: 2.5 url: resources/GameAssets/statickAssets/terrain/roadH.png animated: false fps: 1 type: static
+name: r X: -128 Y: 120 scale_x: 2 scale_y: 2.5 url: resources/GameAssets/statickAssets/terrain/roadH.png animated: false fps: 1 type: static
+
 lay
-name: elka X: 0 Y: 0 scale_x: 3 scale_y: 3 url: resources/GameAssets/statickAssets/terrain/elka3.png animated: false fps: 24 type: static
+name: elka X: -128 Y: -100 scale_x: 3 scale_y: 3.5 url: resources/GameAssets/statickAssets/terrain/elka.png animated: false fps: 1 type: static
+name: elka X: -180 Y: -100 scale_x: 3 scale_y: 3.5 url: resources/GameAssets/statickAssets/terrain/elka3.png animated: false fps: 1 type: static
+name: elka X: -130 Y: 0 scale_x: 2 scale_y: 2.5 url: resources/GameAssets/statickAssets/terrain/elka2.png animated: false fps: 1 type: static
+
+lay
+name: house X: 0 Y: 0 scale_x: 2 scale_y: 2.5 url: resources/GameAssets/statickAssets/buildings/redHouse00.png	animated: false fps: 1 type: static
+name: house X: 128 Y: 0 scale_x: 2 scale_y: 2.5 url: resources/GameAssets/statickAssets/buildings/redHouse10.png	animated: false fps: 1 type: static
+name: house X: 0 Y: -160 scale_x: 2 scale_y: 2.5 url: resources/GameAssets/statickAssets/buildings/redHouse01.png	animated: false fps: 1 type: static
+name: house X: 128 Y: -160 scale_x: 2 scale_y: 2.5 url: resources/GameAssets/statickAssets/buildings/redHouse11.png	animated: false fps: 1 type: static
+
+lay
+name: player X: 0 Y: 0 scale_x: 2 scale_y: 2 url: resources/GameAssets/animations/idle/ahIdle.png animated: true fps: 24 type: dynamic
+
+
+lay
+name: car X: -128 Y: 120 scale_x: 2 scale_y: 2.5 url: resources/GameAssets/statickAssets/buildings/blueCarBre00.png	animated: false fps: 1 type: static
+name: car X: 0 Y: 120 scale_x: 2 scale_y: 2.5 url: resources/GameAssets/statickAssets/buildings/blueCarBre10.png	animated: false fps: 1 type: static
+
