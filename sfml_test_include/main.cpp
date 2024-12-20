@@ -2,9 +2,9 @@
 #include "GameClass.h"
 #include <iostream>
 
-void controlScript(GAME_POINTER)
+void controlScript(GameClass* Game)
 {
-	if (!GAME->getObject("player", OBJECT)) { return; }
+	if (!Game->getObject("player", OBJECT)) { return; }
 	if (OBJECT->moveRight) { OBJECT->moveX(150 * DELTA_TIME.asSeconds()); }
 	if (OBJECT->moveLeft) { OBJECT->moveX(-1 * 150 * DELTA_TIME.asSeconds()); }
 	if (OBJECT->moveUp) { OBJECT->moveY(-1 * 150 * DELTA_TIME.asSeconds()); }

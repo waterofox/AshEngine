@@ -1,6 +1,8 @@
 #include "GameClass.h"
 void GameClass::run()
 {
+	//это только проверка на то, чтоб при запуске окна загружалось хоть что-то;
+	if (!isSceneReady) { std::cout << "ENGINE_ERROR: no loaded scene" << '\n'; return; }
 	window.create(sf::VideoMode(width, height), "GameClassWindow");
 	window.setFramerateLimit(framePerSeconds);
 
@@ -22,10 +24,6 @@ void GameClass::run()
 				update(); // update gamelogic and prerender
 			}
 			render(); //render
-		}
-		else
-		{
-			//todo ожидание загрузки сцены
 		}
 	}
 }
@@ -49,15 +47,19 @@ void GameClass::eventHandling()
 void GameClass::update()
 {
 	//update camera position (target of player)
-	Game::GameObject* player = nullptr;
-	if (this->getObject("player", player))
+	if (dynamicCamera) // only if dynamicCamera is true;
 	{
-		sf::Vector2f playerPosition = player->getPosition();
-		Game::Sizef playerSize = player->getSize();
-		camera.setCenter(sf::Vector2f(playerPosition.x + (playerSize.width / 2), playerPosition.y + (playerSize.height / 2)));
+		Game::GameObject* player = nullptr;
+		if (this->getObject("player", player))
+		{
+			sf::Vector2f playerPosition = player->getPosition();
+			Game::Sizef playerSize = player->getSize();
+			camera.setCenter(sf::Vector2f(playerPosition.x + (playerSize.width / 2), playerPosition.y + (playerSize.height / 2)));
+		}
+		player = nullptr;
 	}
 	//update animations on scene
-	for (auto lay = scene->begin(); lay < scene->end(); ++lay)
+	for (auto lay = scene->begin(); lay < scene->end(); ++lay) 
 	{
 		lay->sceneAnimationsUpdate(fixedDeltaTime);
 	}
@@ -107,20 +109,54 @@ bool GameClass::loadScene(std::string path)
 	std::string key;
 	std::string value;
 	int layIndex = -1;
-	
+
+
 	while (!sceneFile.eof())
 	{
 		sceneFile >> key;
-		if (key == "view_status:")
+		if (key == "camera:")
 		{
 			sceneFile >> value;
 			if (value == "dynamic") { dynamicCamera = true; } 
 			else if (value == "static") { dynamicCamera = false; }
 			else 
 			{
-				std::cout << "SCENE_ERRRO: incorrect value of key <<  " << key << '\n';
+				std::cout << "SCENE_ERROR: incorrect value of key <<  " << key << '\n';
 				return false;
 			}
+		}
+		else if(key == "fullscreen:")
+		{
+			sceneFile >> value;
+			if (value == "true") { fullscreen = true; }
+			else if (value == "false") { fullscreen = false; }
+			else
+			{
+				std::cout << "SCENE_ERROR: incorrect value of key << " << key << '\n';
+				return false;
+			}
+		}
+		else if (key == "camera_width:")
+		{
+			sceneFile >> value;
+			if (!fullscreen) { camera.setSize(std::stof(value), 0); }
+			else { camera.setSize(width, height); }
+		}
+		else if (key == "camera_height:")
+		{
+			sceneFile >> value;
+			if (!fullscreen) { camera.setSize(camera.getSize().x, std::stof(value)); }
+			else { camera.setSize(width, height);}
+		}
+		else if (key == "camera_X:")
+		{
+			sceneFile >> value;
+			if (!dynamicCamera) { camera.setCenter(std::stof(value), 0); }
+		}
+		else if (key == "camera_Y:")
+		{
+			sceneFile >> value;
+			if (!dynamicCamera) { camera.setCenter(camera.getCenter().x, std::stof(value)); }
 		}
 		else if(key == "scene:")
 		{
@@ -171,7 +207,7 @@ bool GameClass::loadScene(std::string path)
 			else
 			{
 				sceneFile.close();
-				std::cout << "SCENE_ERRRO: incorrect value of key <<  " << key << '\n';
+				std::cout << "SCENE_ERROR: incorrect value of key <<  " << key << '\n';
 				return false;
 			}
 		}
@@ -194,14 +230,14 @@ bool GameClass::loadScene(std::string path)
 			else
 			{
 				sceneFile.close();
-				std::cout << "SCENE_ERRRO: incorrect value of key <<  " << key << '\n';
+				std::cout << "SCENE_ERROR: incorrect value of key <<  " << key << '\n';
 				return false;
 			}
 		}
 		else
 		{
 			sceneFile.close();
-			std::cout << "SCENE_ERRRO: incorrect key <<  " << key << '\n';
+			std::cout << "SCENE_ERROR: incorrect key <<  " << key << '\n';
 			return false;
 		}
 	}

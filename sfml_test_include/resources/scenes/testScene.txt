@@ -1,5 +1,7 @@
 scene: test
-view_status: dynamic
+
+camera: dynamic fullscreen: true camera_width: 100 camera_height: 100 camera_X: 100 camera_Y: 100   
+
 lay
 name: r X: 256 Y: 120 scale_x: 2 scale_y: 2.5 url: resources/GameAssets/statickAssets/terrain/roadH.png animated: false fps: 1 type: static
 name: r X: 128 Y: 120 scale_x: 2 scale_y: 2.5 url: resources/GameAssets/statickAssets/terrain/roadHV.png animated: false fps: 1 type: static

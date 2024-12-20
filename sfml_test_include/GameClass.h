@@ -10,9 +10,9 @@
 
 
 //дефайны дл€ упращени€ работы с движком:
-#define DELTA_TIME GAME->getDeltaTime()
-#define OBJECT GAME->getVessel()
-#define GAME_POINTER GameClass* GAME
+#define DELTA_TIME Game->getDeltaTime()
+#define OBJECT Game->getVessel()
+#define GAME_POINTER GameClass* Game
 
 class GameClass
 {
@@ -41,8 +41,9 @@ private:
 	std::string sceneName = "";
 	bool isSceneReady = false;
 
-	sf::View camera; //камера todo: подумать над тем, чтобы сделать камеру опциональным объектом
+	sf::View camera; //камера
 	bool dynamicCamera = false;
+	bool fullscreen = false;
 
 	Game::GameObject* buferObject = nullptr; // дл€ подт€гивани€ объектов (сосуд посути)
 
@@ -69,11 +70,12 @@ public:
 	sf::Vector2u getWindowSize();
 	
 	sf::Time getDeltaTime();
+
+	sf::View& getCamera();
 //important staff
 	//constructors
 	GameClass(unsigned int width, unsigned int height,unsigned int fps)
 	{
-		this->camera.setSize(sf::Vector2f(width,height));
 		this->width = width;
 		this->height = height;
 		this->framePerSeconds = fps;
