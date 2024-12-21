@@ -2,7 +2,9 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include "ShLlib/GameScene.h"
+
+#include "GameScene.h"
+
 #include <iostream>
 #include <fstream>
 #include<vector>
@@ -12,7 +14,6 @@
 //дефайны для упращения работы с движком:
 #define DELTA_TIME Game->getDeltaTime()
 #define OBJECT Game->getVessel()
-#define GAME_POINTER GameClass* Game
 
 class GameClass
 {

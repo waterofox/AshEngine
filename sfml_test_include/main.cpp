@@ -1,6 +1,18 @@
 
-#include "GameClass.h"
+#include "ShLlib/ShLlib.h"
 #include <iostream>
+
+enum CustomeEvents
+{
+	begin_event = 1,
+};
+void begin_event_instruction(GameClass* Game, Game::GameObject* sender)
+{
+	if (sender->getPosition().x == 0) 
+	{
+		std::cout << "EVENT; object is on zero x cord" << '\n';
+	}
+}
 
 void controlScript(GameClass* Game)
 {
@@ -15,7 +27,9 @@ void controlScript(GameClass* Game)
 int main() 
 {
 	GameClass game(640,480,60);
-	game.addScript("test", controlScript);
+	game.addScript("test", controlScript); //Сёме не нравится то, что скрипты нужно добавлять к конктретной сцене
+
+
 	game.loadScene("resources/scenes/testScene.txt");
 	game.run();
 }
