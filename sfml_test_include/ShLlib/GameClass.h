@@ -7,8 +7,10 @@
 
 #include <iostream>
 #include <fstream>
+
 #include<vector>
 #include<map>
+#include<queue>
 
 
 //дефайны для упращения работы с движком:
@@ -32,6 +34,10 @@ private:
 	//поля для отлеживание сист.событий
 	sf::Event actualEvent;
 	sf::Keyboard::Key key;
+
+	//game events instructions
+	std::map<int, instruction> instructions;
+	std::queue<std::pair<int,Game::GameObject*>> gameEventQueue;		//todo когда буду писать смену сцен, нужно принудительно выполнять весь стек евентов до конца.
 
 	sf::RenderWindow window; //основное окно
 	unsigned int width;
@@ -68,11 +74,16 @@ public:
 
 	void addScript(std::string sceneName, script scriptPtr);
 
+	void addInstruction(int id, instruction instructionPtr);
+	void emitGameEvent(int eventId,Game::GameObject * sender);
+
 	sf::Vector2u getWindowSize();
 	
 	sf::Time getDeltaTime();
 
 	sf::View& getCamera();
+
+
 //important staff
 	//constructors
 	GameClass(unsigned int width, unsigned int height,unsigned int fps)

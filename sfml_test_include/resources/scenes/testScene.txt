@@ -20,7 +20,7 @@ name: house X: 0 Y: -160 scale_x: 2 scale_y: 2.5 url: resources/GameAssets/stati
 name: house X: 128 Y: -160 scale_x: 2 scale_y: 2.5 url: resources/GameAssets/statickAssets/buildings/redHouse11.png	animated: false fps: 1 type: static
 
 lay
-name: player X: 0 Y: 0 scale_x: 2 scale_y: 2 url: resources/GameAssets/animations/idle/ahIdle.png animated: true fps: 24 type: dynamic
+name: player X: 10 Y: 0 scale_x: 2 scale_y: 2 url: resources/GameAssets/animations/idle/ahIdle.png animated: true fps: 24 type: dynamic
 
 
 lay

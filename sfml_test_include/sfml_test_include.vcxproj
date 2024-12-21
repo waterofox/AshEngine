@@ -20,13 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ShLlib\EventProcessor.cpp" />
     <ClCompile Include="ShLlib\GameClass.cpp" />
     <ClCompile Include="ShLlib\GameObject.cpp" />
     <ClCompile Include="ShLlib\GameScene.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ShLlib\EventProcessor.h" />
     <ClInclude Include="ShLlib\GameClass.h" />
     <ClInclude Include="ShLlib\GameObject.h" />
     <ClInclude Include="ShLlib\GameScene.h" />

@@ -63,6 +63,18 @@ void GameClass::update()
 	{
 		lay->sceneAnimationsUpdate(fixedDeltaTime);
 	}
+
+	//events
+	if (!gameEventQueue.empty())
+	{
+		while (!gameEventQueue.empty())
+		{
+			std::pair<int, Game::GameObject*>& sender = gameEventQueue.front();
+			auto& instructionPtr = instructions[sender.first];
+			instructionPtr(this, sender.second);
+			gameEventQueue.pop();
+		}
+	}
 	//scripts
 	std::vector<script>& actualScrits = scripts[sceneName];
 	for (auto& scriptPtr : actualScrits)
@@ -265,6 +277,16 @@ void GameClass::addScript(std::string sceneName, script scriptPtr)
 	actualScripts.push_back(scriptPtr);
 }
 
+void GameClass::addInstruction(int id, instruction instructionPtr)
+{
+	instructions.insert(std::pair<int, instruction>(id, instructionPtr));
+}
+
+void GameClass::emitGameEvent(int eventId, Game::GameObject* sender)
+{
+	gameEventQueue.push(std::pair<int, Game::GameObject*>(eventId, sender));
+}
+
 Game::GameObject*& GameClass::getVessel()
 {
 	return buferObject;
@@ -278,4 +300,9 @@ sf::Vector2u GameClass::getWindowSize()
 sf::Time GameClass::getDeltaTime()
 {
 	return this->fixedDeltaTime;
+}
+
+sf::View& GameClass::getCamera()
+{
+	return this->camera;
 }
