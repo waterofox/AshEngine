@@ -210,6 +210,7 @@ bool GameClass::loadScene(std::string path)
 		{
 			sceneFile >> value;
 			newObj.updateTexture(value);
+			newObj.setTexturePath(value);
 		}
 		else if (key == "animated:")
 		{
@@ -233,11 +234,11 @@ bool GameClass::loadScene(std::string path)
 			sceneFile >> value;
 			if (value == "dynamic")
 			{
-				(*scene)[layIndex].addObject(newObj.gertName(), newObj, Game::objectType::dynamicType);
+				(*scene)[layIndex].addObject(newObj.getName(), newObj, Game::objectType::dynamicType);
 			}
 			else if(value == "static")
 			{
-				(*scene)[layIndex].addObject(newObj.gertName(), newObj, Game::objectType::staticType);
+				(*scene)[layIndex].addObject(newObj.getName(), newObj, Game::objectType::staticType);
 			}
 			else
 			{

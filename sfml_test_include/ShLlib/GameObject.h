@@ -16,12 +16,18 @@ namespace Game
 		float width = 0;
 		float height = 0;
 	};
+	struct cords
+	{
+		int x;
+		int y;
+	};
 	class GameObject
 	{
 		private:
 		//obj
 		sf::Sprite objSprite; 
 		sf::Texture objTexture;
+		std::string objTexturePath;
 		sf::Vector2f objMovement;
 		std::string name = "none";
 		//animation
@@ -63,13 +69,15 @@ namespace Game
 		sf::Sprite getSFMlobj(); //возвращает SFML объект для отрисовки в окне
 		sf::Vector2f getPosition(); //Возвращает текущую позицию (левый верхний угол)
 		Sizef getSize(); //возвращается текущего sf::Sprite с учётом скейла
-		std::string gertName() { return this->name; }
+		std::string getName() { return this->name; }
+		std::string getTexture() { return this->objTexturePath; }
 		//set
 		void setPosition(sf::Vector2f); //изменение позиции объекта
 		void setX(float newX);
 		void setY(float newY);
 		void setScale(sf::Vector2f); //изменение скейла
 		void setName(std::string name) { this->name = name; }
+		void setTexturePath(std::string path) { this->objTexturePath = path; }
 
 		void setTexture(sf::Texture&); // переприсовение текстуры (оно тебе не нужно, это сугубо для удобства работы основного методв подгрузки текстуры)
 		void setCurrentFrame(int);//изменяет текущий кадр анимации

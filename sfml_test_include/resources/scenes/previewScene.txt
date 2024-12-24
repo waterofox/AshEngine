@@ -1,0 +1,30 @@
+scene: preview
+
+camera: dynamic fullscreen: true camera_width: 100 camera_height: 100 camera_X: 100 camera_Y: 100   
+lay
+name: r X: 256 Y: 30 scale_x: 2 scale_y: 2.5 url: resources/GameAssets/statickAssets/terrain/roadH.png animated: false fps: 1 type: static
+name: r X: 128 Y: 30 scale_x: 2 scale_y: 2.5 url: resources/GameAssets/statickAssets/terrain/roadHV.png animated: false fps: 1 type: static
+name: r X: 0 Y: 30 scale_x: 2 scale_y: 2.5 url: resources/GameAssets/statickAssets/terrain/roadH.png animated: false fps: 1 type: static
+name: r X: -128 Y: 30 scale_x: 2 scale_y: 2.5 url: resources/GameAssets/statickAssets/terrain/roadH.png animated: false fps: 1 type: static
+
+lay
+name: elka X: -128 Y: -100 scale_x: 2 scale_y: 2 url: resources/GameAssets/statickAssets/terrain/elka.png animated: false fps: 1 type: static
+name: elka X: -180 Y: -100 scale_x: 2 scale_y: 2 url: resources/GameAssets/statickAssets/terrain/elka3.png animated: false fps: 1 type: static
+name: elka X: -130 Y: -60 scale_x: 2 scale_y: 2 url: resources/GameAssets/statickAssets/terrain/elka2.png animated: false fps: 1 type: static
+
+name: elka X: -68 Y: -100 scale_x: 2 scale_y: 2 url: resources/GameAssets/statickAssets/terrain/elka.png animated: false fps: 1 type: static
+name: elka X: -70 Y: -60 scale_x: 2 scale_y: 2 url: resources/GameAssets/statickAssets/terrain/elka2.png animated: false fps: 1 type: static
+name: elka X: 0 Y: -60 scale_x: 2 scale_y: 2 url: resources/GameAssets/statickAssets/terrain/elka3.png animated: false fps: 1 type: static
+
+lay
+
+name: plita_2 X: 50 Y: -20 scale_x: 2 scale_y: 2 url: resources/GameAssets/statickAssets/buildings/disPlita.png	animated: false fps: 1 type: dynamic
+name: plita_1 X: 0 Y: 0 scale_x: 2 scale_y: 2 url: resources/GameAssets/statickAssets/buildings/disPlita.png	animated: false fps: 1 type: dynamic
+
+lay
+name: desc X: -1000 Y: 10 scale_x: 2 scale_y: 2 url: resources/GameAssets/statickAssets/buildings/desc.png	animated: false fps: 1 type: dynamic
+
+lay
+
+name: player X: 0 Y: 30 scale_x: 2 scale_y: 2 url: resources/GameAssets/animations/player/playerFrontWalk.png animated: false fps: 24 type: dynamic
+

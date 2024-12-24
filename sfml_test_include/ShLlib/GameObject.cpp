@@ -11,6 +11,13 @@ Game::GameObject::GameObject(const GameObject& objB)
 	this->objSprite = objB.objSprite;
 	this->objTexture = objB.objTexture;
 	this->setTexture(this->objTexture);
+
+	this->moveUp = objB.moveUp;
+	this->moveLeft = objB.moveLeft;
+	this->moveRight = objB.moveRight;
+	this->moveDown = objB.moveDown;
+
+	this->name = objB.name;
 }
 GameObject::~GameObject() {}
 sf::Sprite GameObject::getSFMlobj() { return objSprite; }
@@ -41,14 +48,18 @@ void Game::GameObject::setY(float newY)
 }
 void GameObject::setScale(sf::Vector2f newScale) { objSprite.setScale(newScale); }
 void GameObject::setFrameCount(int newFrameCount) { frameCount = newFrameCount; }
-void GameObject::setCurrentFrame(int newCurrentFrame) { currentFrame = newCurrentFrame; }
+void GameObject::setCurrentFrame(int newCurrentFrame) 
+{
+	currentFrame = newCurrentFrame;
+	objSprite.setTextureRect(sf::IntRect(int(currentFrame) * (objTexture.getSize().x / frameCount), 0, objTexture.getSize().y, objTexture.getSize().y));
+}
 void GameObject::setTexture(sf::Texture& newTexture)
 {
 	setFrameCount(newTexture.getSize().x/newTexture.getSize().y);
 	setCurrentFrame(0.f);
 	objSprite.setTexture(newTexture);
 	objSprite.setTextureRect(sf::IntRect(0,0,newTexture.getSize().y,newTexture.getSize().y));
-	if (frameCount > 1) { enableAnimation(); }
+	if (frameCount > 1 and isAnima) { enableAnimation(); }
 }
 void GameObject::setFramePerSeconds(int newFramePerSeconds) { framePerSeconds = newFramePerSeconds; }
 void GameObject::disableAnimation() { isAnima = false; }
@@ -57,13 +68,14 @@ bool GameObject::isAnimated() { return isAnima; }
 void GameObject::updateAnimation(sf::Time deltaTime)
 {
 	if (!isAnima) { return; }
-	currentFrame += (int(framePerSeconds/2) + 1)*deltaTime.asSeconds();
+	currentFrame += (int(framePerSeconds/frameCount) + 1)*deltaTime.asSeconds();
+	if (currentFrame >= frameCount) { currentFrame -= frameCount; }
 	objSprite.setTextureRect(sf::IntRect(int(currentFrame)*(objTexture.getSize().x/frameCount), 0, objTexture.getSize().y, objTexture.getSize().y));
-	if (int(currentFrame) >= frameCount-1) { currentFrame = 0.f; }
 }
 void GameObject::updateTexture(std::string path)
 {
 	objTexture.loadFromFile(path);
+	objTexturePath = path;
 	setTexture(objTexture);
 }
 void GameObject::moveX(float plusX) { objMovement.x += plusX; objSprite.setPosition(objMovement); }
