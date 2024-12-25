@@ -27,7 +27,7 @@ enum CustomeEvents
 };
 void plita_pressed_instruction(GameClass* Game, Game::GameObject* sender)
 {
-
+	Game::GameObject* OBJECT = nullptr;
 	//todo ДОБАВЬ УЖЕ visible для ОБЪЕКТОВ!
 	if (sender->getName() == "plita_1")
 	{
@@ -42,12 +42,11 @@ void plita_pressed_instruction(GameClass* Game, Game::GameObject* sender)
 		Game->getObject("plita_2", OBJECT);
 		OBJECT->updateTexture(texture[PLITA_PRESSED]);
 	}
+	OBJECT = nullptr;
 }
 
-void controlScript(GameClass* Game)
+void controlScript(GameClass* Game,Game::GameObject* OBJECT)
 {
-	if (!Game->getObject("player", OBJECT)) { return; }
-
 	if (!(OBJECT->moveDown or OBJECT->moveUp or OBJECT->moveRight or OBJECT->moveLeft))
 	{
 		if (OBJECT->isAnimated())
@@ -92,6 +91,7 @@ void controlScript(GameClass* Game)
 		OBJECT->moveY(150 * DELTA_TIME.asSeconds());
 	}
 }
+/*
 void plitaScript(GameClass* Game)
 {
 	int countOfPLits = 2;
@@ -117,15 +117,13 @@ void plitaScript(GameClass* Game)
 			Game->emitGameEvent(plita_pressed, OBJECT);
 		}
 	}
-}
-
-
+}*/
 int main() 
 {
 
 	GameClass game(640,480,60);
-	game.addScript("preview", controlScript); //todo блять. скрипты должны цепляться на объекты, а не на сцену
-	game.addScript("preview", plitaScript);
+	game.addScript("preview", "player", controlScript); //todo блять. скрипты должны цепляться на объекты, а не на сцену
+	//game.addScript("preview", plitaScript);
 
 	game.addInstruction(plita_pressed, plita_pressed_instruction);
 

@@ -15,12 +15,10 @@
 
 //дефайны дл€ упращени€ работы с движком:
 #define DELTA_TIME Game->getDeltaTime()
-#define OBJECT Game->getVessel()
-
 class GameClass
 {
 	//тип дл€ скриптов:
-	using script = void(*)(GameClass*);
+	using script = void(*)(GameClass*,Game::GameObject*);
 
 	//тип дл€ инструкций обработки:
 	using instruction = void(*)(GameClass*, Game::GameObject*);
@@ -55,7 +53,7 @@ private:
 	Game::GameObject* buferObject = nullptr; // дл€ подт€гивани€ объектов (сосуд посути)
 
 	//game scripts
-	std::map<std::string, std::vector<script>> scripts;
+	std::map<std::string, std::vector<std::pair<std::string, script>>> scripts;
 
 public:
 	//sfml classic methods
@@ -70,9 +68,8 @@ public:
 	bool loadScene(std::string path);
 
 	bool getObject(std::string name, Game::GameObject*& buffer);
-	Game::GameObject*& getVessel();
 
-	void addScript(std::string sceneName, script scriptPtr);
+	void addScript(std::string sceneName,std::string objectName, script scriptPtr);
 
 	void addInstruction(int id, instruction instructionPtr);
 	void emitGameEvent(int eventId,Game::GameObject * sender);

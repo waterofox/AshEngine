@@ -76,10 +76,14 @@ void GameClass::update()
 		}
 	}
 	//scripts
-	std::vector<script>& actualScrits = scripts[sceneName];
-	for (auto& scriptPtr : actualScrits)
+	std::vector<std::pair<std::string,script>>& actualScrits = scripts[sceneName];
+	for (auto& script : actualScrits)
 	{
-		scriptPtr(this);
+		if (this->getObject(script.first, buferObject))
+		{
+			script.second(this, buferObject);
+			buferObject = nullptr;
+		}
 	}
 }
 
@@ -272,10 +276,10 @@ bool GameClass::getObject(std::string name, Game::GameObject*& buffer)
 	return false;
 }
 
-void GameClass::addScript(std::string sceneName, script scriptPtr)
+void GameClass::addScript(std::string sceneName,std::string objectName, script scriptPtr)
 {
-	std::vector<script>& actualScripts = scripts[sceneName];
-	actualScripts.push_back(scriptPtr);
+	std::vector<std::pair<std::string,script>>& actualScripts = scripts[sceneName];
+	actualScripts.push_back(std::pair<std::string, script>(objectName, scriptPtr));
 }
 
 void GameClass::addInstruction(int id, instruction instructionPtr)
@@ -286,11 +290,6 @@ void GameClass::addInstruction(int id, instruction instructionPtr)
 void GameClass::emitGameEvent(int eventId, Game::GameObject* sender)
 {
 	gameEventQueue.push(std::pair<int, Game::GameObject*>(eventId, sender));
-}
-
-Game::GameObject*& GameClass::getVessel()
-{
-	return buferObject;
 }
 
 sf::Vector2u GameClass::getWindowSize()
