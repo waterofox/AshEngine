@@ -32,13 +32,16 @@ void plita_pressed_instruction(GameClass* Game, Game::GameObject* sender)
 	if (sender->getName() == "plita_1")
 	{
 		if (!Game->getObject("desc", OBJECT)) { return; }
-		OBJECT->setX(sender->getPosition().x + 100);
+		OBJECT->setVisible(true);
 		
 		Game->getObject("plita_1", OBJECT);
 		OBJECT->updateTexture(texture[PLITA_PRESSED]);
 	}
 	if (sender->getName() == "plita_2")
 	{
+		if (!Game->getObject("desc", OBJECT)) { return; }
+		OBJECT->setVisible(false);
+
 		Game->getObject("plita_2", OBJECT);
 		OBJECT->updateTexture(texture[PLITA_PRESSED]);
 	}
@@ -91,39 +94,39 @@ void controlScript(GameClass* Game,Game::GameObject* OBJECT)
 		OBJECT->moveY(150 * DELTA_TIME.asSeconds());
 	}
 }
-/*
-void plitaScript(GameClass* Game)
-{
-	int countOfPLits = 2;
-	std::string objName = "plita_";
-	Game::cords plitaCenter;
-	Game::cords playerCheck;
 
-	for (int i = 0; i < 2; ++i)
+void plitaScript(GameClass* Game, Game::GameObject* plita)
+{
+	Game::GameObject* player = nullptr;
+	if (Game->getObject("player", player)) //TODO нахуй переписать getObject
 	{
-		if (!Game->getObject(objName + std::to_string(i + 1), OBJECT)) { continue; }
-		Game::GameObject* player = nullptr;
-		if (!Game->getObject("player", player)) { continue; }
-		// центр плиты
-		plitaCenter.x = OBJECT->getPosition().x + (OBJECT->getSize().width) / 2;
-		plitaCenter.y = OBJECT->getPosition().y + OBJECT->getSize().height-20;
-		//серидина нижней границы игрока
-		playerCheck.x = player->getPosition().x + (player->getSize().width) / 2;
-		playerCheck.y = player->getPosition().y + player->getSize().height;
+		Game::cords playerCordsCheck;
+		Game::cords plitaCordsCheck;
 
-		if (playerCheck.x >= plitaCenter.x - 20 and playerCheck.x <= plitaCenter.x + 20 and \
-			playerCheck.y <= plitaCenter.y + 10 and playerCheck.y >= plitaCenter.y - 10)
+		plitaCordsCheck.x = plita->getPosition().x + (plita->getSize().width / 2);
+		plitaCordsCheck.y = plita->getPosition().y + (plita->getSize().height - 20);
+		
+		playerCordsCheck.x = player->getPosition().x + (player->getSize().width / 2);
+		playerCordsCheck.y = player->getPosition().y + (player->getSize().height);
+
+		if (playerCordsCheck.x >= plitaCordsCheck.x - 20 and playerCordsCheck.x <= plitaCordsCheck.x + 20 and \
+			playerCordsCheck.y >= plitaCordsCheck.y - 10 and playerCordsCheck.y <= plitaCordsCheck.y + 10) 
 		{
-			Game->emitGameEvent(plita_pressed, OBJECT);
+			Game->emitGameEvent(plita_pressed, plita);
 		}
+		
+		player = nullptr;
 	}
-}*/
-int main() 
+	
+}
+
+int main()
 {
 
-	GameClass game(640,480,60);
-	game.addScript("preview", "player", controlScript); //todo блять. скрипты должны цепляться на объекты, а не на сцену
-	//game.addScript("preview", plitaScript);
+	GameClass game(640, 480, 60);
+	game.addScript("preview", "player", controlScript); 
+	game.addScript("preview", "plita_1", plitaScript);
+	game.addScript("preview", "plita_2", plitaScript);
 
 	game.addInstruction(plita_pressed, plita_pressed_instruction);
 

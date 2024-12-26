@@ -65,16 +65,14 @@ void GameClass::update()
 	}
 
 	//events
-	if (!gameEventQueue.empty())
+	while (!gameEventQueue.empty())
 	{
-		while (!gameEventQueue.empty())
-		{
-			std::pair<int, Game::GameObject*>& sender = gameEventQueue.front();
-			auto& instructionPtr = instructions[sender.first];
-			instructionPtr(this, sender.second);
-			gameEventQueue.pop();
-		}
+		std::pair<int, Game::GameObject*>& sender = gameEventQueue.front();
+		auto& instructionPtr = instructions[sender.first];
+		instructionPtr(this, sender.second);
+		gameEventQueue.pop();
 	}
+
 	//scripts
 	std::vector<std::pair<std::string,script>>& actualScrits = scripts[sceneName];
 	for (auto& script : actualScrits)
@@ -216,6 +214,18 @@ bool GameClass::loadScene(std::string path)
 			newObj.updateTexture(value);
 			newObj.setTexturePath(value);
 		}
+		else if (key == "visible:")
+		{
+			sceneFile >> value;
+			if (value == "true") { newObj.setVisible(true); }
+			else if (value == "false") { newObj.setVisible(false); }
+			else
+			{
+				sceneFile.close();
+				std::cout << "SCENE_ERROR: incorrect value of key <<  " << key << '\n';
+				return false;
+			}
+		}
 		else if (key == "animated:")
 		{
 			sceneFile >> value;
@@ -239,10 +249,12 @@ bool GameClass::loadScene(std::string path)
 			if (value == "dynamic")
 			{
 				(*scene)[layIndex].addObject(newObj.getName(), newObj, Game::objectType::dynamicType);
+				newObj.setVisible(true);
 			}
 			else if(value == "static")
 			{
 				(*scene)[layIndex].addObject(newObj.getName(), newObj, Game::objectType::staticType);
+				newObj.setVisible(true);
 			}
 			else
 			{

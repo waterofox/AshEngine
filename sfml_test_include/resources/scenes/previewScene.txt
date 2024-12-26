@@ -22,7 +22,7 @@ name: plita_2 X: 50 Y: -20 scale_x: 2 scale_y: 2 url: resources/GameAssets/stati
 name: plita_1 X: 0 Y: 0 scale_x: 2 scale_y: 2 url: resources/GameAssets/statickAssets/buildings/disPlita.png	animated: false fps: 1 type: dynamic
 
 lay
-name: desc X: -1000 Y: 10 scale_x: 2 scale_y: 2 url: resources/GameAssets/statickAssets/buildings/desc.png	animated: false fps: 1 type: dynamic
+name: desc X: 100 Y: 10 scale_x: 2 scale_y: 2 url: resources/GameAssets/statickAssets/buildings/desc.png visible: false animated: false fps: 1 type: dynamic
 
 lay
 

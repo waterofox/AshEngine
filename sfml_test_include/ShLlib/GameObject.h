@@ -30,6 +30,8 @@ namespace Game
 		std::string objTexturePath;
 		sf::Vector2f objMovement;
 		std::string name = "none";
+
+		bool visible = true;
 		//animation
 		bool isAnima = false;
 		int frameCount = 1;
@@ -55,6 +57,7 @@ namespace Game
 			this->objSprite = objB.objSprite;
 			this->objTexture = objB.objTexture;
 			this->setTexture(this->objTexture);
+			this->visible = objB.visible;
 
 			this->moveUp = objB.moveUp;
 			this->moveLeft = objB.moveLeft;
@@ -71,6 +74,8 @@ namespace Game
 		Sizef getSize(); //возвращается текущего sf::Sprite с учётом скейла
 		std::string getName() { return this->name; }
 		std::string getTexture() { return this->objTexturePath; }
+
+		bool isVisible() { return this->visible; }
 		//set
 		void setPosition(sf::Vector2f); //изменение позиции объекта
 		void setX(float newX);
@@ -78,6 +83,7 @@ namespace Game
 		void setScale(sf::Vector2f); //изменение скейла
 		void setName(std::string name) { this->name = name; }
 		void setTexturePath(std::string path) { this->objTexturePath = path; }
+		void setVisible(bool arg) { this->visible = arg; }
 
 		void setTexture(sf::Texture&); // переприсовение текстуры (оно тебе не нужно, это сугубо для удобства работы основного методв подгрузки текстуры)
 		void setCurrentFrame(int);//изменяет текущий кадр анимации
@@ -90,6 +96,7 @@ namespace Game
 		void moveX(float plusX); //смещение объекта по Ox согласно заданному парметру
 		void moveY(float plusY); //смещение объекта по Oy согласно заданному парметру
 		void move(float plusX, float plusY);
+
 		//chek
 		bool isAnimated(); //Проверка на то, включена ли анимация 
 		//proc

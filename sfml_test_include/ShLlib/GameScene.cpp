@@ -33,11 +33,13 @@ void Game::GameScene::sceneAnimationsUpdate(sf::Time deltaTime)
 {
 	for (auto obj = staticObjects.begin(); obj < staticObjects.end(); ++obj)
 	{
+		if (!obj->isVisible()) { continue; }
 		if (obj->isAnimated()) { obj->updateAnimation(deltaTime); }
 	}
 	for (auto& element : dynamicObjects)
 	{
 		GameObject& obj = element.second;
+		if (!obj.isVisible()) { continue; }
 		if (obj.isAnimated()) { obj.updateAnimation(deltaTime); }
 	}
 }
@@ -46,11 +48,13 @@ void Game::GameScene::renderScene(sf::RenderWindow& window)
 {
 	for (auto obj = staticObjects.begin(); obj < staticObjects.end(); ++obj)
 	{
+		if (!obj->isVisible()) { continue; }
 		window.draw(obj->getSFMlobj());
 	}
 	for (auto& element : dynamicObjects)
 	{
 		GameObject& obj = element.second;
+		if (!obj.isVisible()) { continue; }
 		window.draw(obj.getSFMlobj());
 	}
 

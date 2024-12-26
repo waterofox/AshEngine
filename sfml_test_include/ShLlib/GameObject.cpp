@@ -11,6 +11,7 @@ Game::GameObject::GameObject(const GameObject& objB)
 	this->objSprite = objB.objSprite;
 	this->objTexture = objB.objTexture;
 	this->setTexture(this->objTexture);
+	this->visible = objB.visible;
 
 	this->moveUp = objB.moveUp;
 	this->moveLeft = objB.moveLeft;
