@@ -36,10 +36,30 @@ void GameClass::eventHandling()
 		switch (actualEvent.type)
 		{
 		case sf::Event::Closed: {window.close(); } break;
-		case sf::Event::KeyPressed: { playerInput(actualEvent.key.code, true); }break;
-		case sf::Event::KeyReleased: {playerInput(actualEvent.key.code, false); }break;
+		case sf::Event::KeyPressed:
+		{
+			if (isCustomInputLoaded)
+			{
+				input.second(this, actualEvent.key.code, true);
+			}
+			else
+			{
+				playerInputStandart(actualEvent.key.code, true);
+			}
+		}break;
+		case sf::Event::KeyReleased:
+		{
+			if (isCustomInputLoaded)
+			{
+				input.second(this, actualEvent.key.code, false);
+			}
+			else
+			{
+				playerInputStandart(actualEvent.key.code, false);
+			}
 		default:
 			break;
+		}
 		}
 	}
 }
@@ -97,19 +117,9 @@ void GameClass::render()
 	window.display();
 }
 
-void GameClass::playerInput(sf::Keyboard::Key key, bool isPressed)
+void GameClass::playerInputStandart(sf::Keyboard::Key key, bool isPressed)
 {
-	Game::GameObject* player = nullptr;
-	if (!this->getObject("player", player)) { return; };
-	switch (key)
-	{
-	case sf::Keyboard::D: {player->moveRight = isPressed; }break;
-	case sf::Keyboard::S: {player->moveDown = isPressed; }break;
-	case sf::Keyboard::A: {player->moveLeft = isPressed; }break;
-	case sf::Keyboard::W: {player->moveUp = isPressed; }break;
-	default:
-		break;
-	}
+	return;
 }
 
 bool GameClass::loadScene(std::string path)
@@ -292,6 +302,13 @@ void GameClass::addScript(std::string sceneName,std::string objectName, script s
 {
 	std::vector<std::pair<std::string,script>>& actualScripts = scripts[sceneName];
 	actualScripts.push_back(std::pair<std::string, script>(objectName, scriptPtr));
+}
+
+void GameClass::setPlayerInput(inputMethod method)
+{
+	std::pair<int, inputMethod> newInput(0, method);
+	this->input = newInput;
+	this->isCustomInputLoaded = true;
 }
 
 void GameClass::addInstruction(int id, instruction instructionPtr)

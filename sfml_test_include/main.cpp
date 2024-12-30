@@ -21,14 +21,32 @@ std::vector<std::string> texture{ "resources/GameAssets/animations/player/player
 									"resources/GameAssets/statickAssets/buildings/disPlita.png",
 									"resources/GameAssets/statickAssets/buildings/enaPlita.png" };
 
+
+
+void playerCustomInput(GameClass* Game, sf::Keyboard::Key key, bool isPressed)
+{
+	Game::GameObject* player = nullptr;
+	if (!Game->getObject("player", player)) { return; };
+	switch (key)
+	{
+	case sf::Keyboard::D: {player->moveRight = isPressed; }break;
+	case sf::Keyboard::S: {player->moveDown = isPressed; }break;
+	case sf::Keyboard::A: {player->moveLeft = isPressed; }break;
+	case sf::Keyboard::W: {player->moveUp = isPressed; }break;
+	default:
+		break;
+	}
+}
+
 enum CustomeEvents
 {
 	plita_pressed = 1
 };
+
 void plita_pressed_instruction(GameClass* Game, Game::GameObject* sender)
 {
 	Game::GameObject* OBJECT = nullptr;
-	//todo ÄÎÁÀÂÜ ÓÆÅ visible äëÿ ÎÁÚÅÊÒÎÂ!
+
 	if (sender->getName() == "plita_1")
 	{
 		if (!Game->getObject("desc", OBJECT)) { return; }
@@ -98,7 +116,7 @@ void controlScript(GameClass* Game,Game::GameObject* OBJECT)
 void plitaScript(GameClass* Game, Game::GameObject* plita)
 {
 	Game::GameObject* player = nullptr;
-	if (Game->getObject("player", player)) //TODO íàõóé ïåðåïèñàòü getObject
+	if (Game->getObject("player", player)) //todo rework this method
 	{
 		Game::cords playerCordsCheck;
 		Game::cords plitaCordsCheck;
@@ -124,9 +142,14 @@ int main()
 {
 
 	GameClass game(640, 480, 60);
+
+	game.setPlayerInput(playerCustomInput);
+
 	game.addScript("preview", "player", controlScript); 
 	game.addScript("preview", "plita_1", plitaScript);
 	game.addScript("preview", "plita_2", plitaScript);
+
+
 
 	game.addInstruction(plita_pressed, plita_pressed_instruction);
 

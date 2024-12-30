@@ -69,37 +69,37 @@ namespace Game
 		}
 		~GameObject();
 		//get
-		sf::Sprite getSFMlobj(); //возвращает SFML объект для отрисовки в окне
-		sf::Vector2f getPosition(); //Возвращает текущую позицию (левый верхний угол)
-		Sizef getSize(); //возвращается текущего sf::Sprite с учётом скейла
+		sf::Sprite getSFMlobj(); //return sfml's core of object
+		sf::Vector2f getPosition(); 
+		Sizef getSize(); 
 		std::string getName() { return this->name; }
 		std::string getTexture() { return this->objTexturePath; }
 
 		bool isVisible() { return this->visible; }
 		//set
-		void setPosition(sf::Vector2f); //изменение позиции объекта
+		void setPosition(sf::Vector2f); //set object position
 		void setX(float newX);
 		void setY(float newY);
-		void setScale(sf::Vector2f); //изменение скейла
+		void setScale(sf::Vector2f); 
 		void setName(std::string name) { this->name = name; }
 		void setTexturePath(std::string path) { this->objTexturePath = path; }
 		void setVisible(bool arg) { this->visible = arg; }
 
-		void setTexture(sf::Texture&); // переприсовение текстуры (оно тебе не нужно, это сугубо для удобства работы основного методв подгрузки текстуры)
-		void setCurrentFrame(int);//изменяет текущий кадр анимации
-		void setFrameCount(int); //изменяет кол-во кадров в анимации
-		void setFramePerSeconds(int); //изменяет кол-во кадров в секунду
-		void disableAnimation(); //отключает анимацию
-		void enableAnimation(); //включает анимацию
-		void updateTexture(std::string); //основной метод подгрузки текстуры
+		void setTexture(sf::Texture&);
+		void setCurrentFrame(int);
+		void setFrameCount(int); 
+		void setFramePerSeconds(int); //set fps of actual animation
+		void disableAnimation();
+		void enableAnimation(); 
+		void updateTexture(std::string); //load texture by path
 		
-		void moveX(float plusX); //смещение объекта по Ox согласно заданному парметру
-		void moveY(float plusY); //смещение объекта по Oy согласно заданному парметру
+		void moveX(float plusX); //Ox move
+		void moveY(float plusY); //Oy move
 		void move(float plusX, float plusY);
 
 		//chek
-		bool isAnimated(); //Проверка на то, включена ли анимация 
+		bool isAnimated(); 
 		//proc
-		void updateAnimation(sf::Time deltaTime); //метод который обновляет текущий кадр анимаци (считай проигрывает её)
+		void updateAnimation(sf::Time deltaTime); //animation play method
 	};
 }

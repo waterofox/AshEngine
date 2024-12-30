@@ -15,11 +15,11 @@ namespace Game
 		std::vector<GameObject> staticObjects;
 	public:
 
-		void addObject(std::string uniqueName, GameObject obj,int type); //добавить объект на сцену
-		void removeObject(std::string uniqueName); // удалить объект со сцены
-		bool getObject(std::string uniqueName,Game::GameObject*& buffer); //получить объект сцены по ссылке
+		void addObject(std::string uniqueName, GameObject obj,int type); //add object to scene
+		void removeObject(std::string uniqueName); //remove object from scene
+		bool getObject(std::string uniqueName,Game::GameObject*& buffer); //get object from scene by name
 		void sceneAnimationsUpdate(sf::Time deltaTime);
-		void renderScene(sf::RenderWindow& window); //рендер нового кадра сцены
+		void renderScene(sf::RenderWindow& window);
 
 		GameScene() {}
 		GameScene(const Game::GameScene& SceneB)
