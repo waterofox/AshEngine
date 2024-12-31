@@ -66,6 +66,12 @@ void plita_pressed_instruction(GameClass* Game, Game::GameObject* sender)
 	OBJECT = nullptr;
 }
 
+
+void rScritp(GameClass* Game, Game::GameObject* r)
+{
+	//r->getSFMlobj().setTextureRect(sf::IntRect(r->getPosition().x, r->getPosition().y, 128, 128));
+	std::cout << r->getSFMlobj().getTextureRect().width << ' ' << r->getSFMlobj().getTextureRect().height << '\n';
+}
 void controlScript(GameClass* Game,Game::GameObject* OBJECT)
 {
 	if (!(OBJECT->moveDown or OBJECT->moveUp or OBJECT->moveRight or OBJECT->moveLeft))
@@ -148,6 +154,7 @@ int main()
 	game.addScript("preview", "player", controlScript); 
 	game.addScript("preview", "plita_1", plitaScript);
 	game.addScript("preview", "plita_2", plitaScript);
+	game.addScript("preview", "r", rScritp);
 
 
 

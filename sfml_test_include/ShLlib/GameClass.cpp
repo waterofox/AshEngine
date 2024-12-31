@@ -208,6 +208,22 @@ bool GameClass::loadScene(std::string path)
 			sceneFile >> value;
 			newObj.setY(std::stof(value));
 		}
+		else if (key == "url:")
+		{
+			sceneFile >> value;
+			newObj.updateTexture(value);
+			newObj.setTexturePath(value);
+		}
+		else if (key == "obj_heigth:")
+		{
+			sceneFile >> value;
+			newObj.getSFMlobj().setTextureRect(sf::IntRect(newObj.getPosition().x, newObj.getPosition().y, 0, std::stoi(value)));
+		}
+		else if (key == "obj_width:")
+		{
+			sceneFile >> value;
+			newObj.getSFMlobj().setTextureRect(sf::IntRect(newObj.getPosition().x, newObj.getPosition().y, std::stoi(value), newObj.getSFMlobj().getTextureRect().height));
+		}
 		else if (key == "scale_x:")
 		{
 			sceneFile >> value;
@@ -216,13 +232,22 @@ bool GameClass::loadScene(std::string path)
 		else if (key == "scale_y:")
 		{
 			sceneFile >> value;
-			newObj.setScale(sf::Vector2f(newObj.getSFMlobj().getScale().x , std::stof(value)));
+			newObj.setScale(sf::Vector2f(newObj.getSFMlobj().getScale().x, std::stof(value)));
 		}
-		else if (key == "url:")
+		else if (key == "repeated:")
 		{
 			sceneFile >> value;
-			newObj.updateTexture(value);
-			newObj.setTexturePath(value);
+			if (value == "true")
+			{
+				newObj.setTextureRepeat(true);
+			}
+			else if (value == "false") { newObj.setTextureRepeat(false); }
+			else 
+			{
+				sceneFile.close();
+				std::cout << "SCENE_ERROR: incorrect value of key <<  " << key << '\n';
+				return false;
+			}
 		}
 		else if (key == "visible:")
 		{

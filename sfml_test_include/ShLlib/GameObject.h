@@ -30,7 +30,8 @@ namespace Game
 		std::string objTexturePath;
 		sf::Vector2f objMovement;
 		std::string name = "none";
-
+		bool textureRepeated = false;
+		
 		bool visible = true;
 		//animation
 		bool isAnima = false;
@@ -56,8 +57,12 @@ namespace Game
 			this->objMovement = objB.objMovement;
 			this->objSprite = objB.objSprite;
 			this->objTexture = objB.objTexture;
-			this->setTexture(this->objTexture);
+			this->setTexture();
 			this->visible = objB.visible;
+
+			this->textureRepeated = objB.textureRepeated;
+			this->setTextureRepeat(this->textureRepeated);
+			this->objSprite.setTextureRect(objB.objSprite.getTextureRect());
 
 			this->moveUp = objB.moveUp;
 			this->moveLeft = objB.moveLeft;
@@ -69,13 +74,15 @@ namespace Game
 		}
 		~GameObject();
 		//get
-		sf::Sprite getSFMlobj(); //return sfml's core of object
+		sf::Sprite& getSFMlobj(); //return sfml's core of object
 		sf::Vector2f getPosition(); 
 		Sizef getSize(); 
 		std::string getName() { return this->name; }
 		std::string getTexture() { return this->objTexturePath; }
 
 		bool isVisible() { return this->visible; }
+		bool isTextureRepeated() { return this->textureRepeated;}
+
 		//set
 		void setPosition(sf::Vector2f); //set object position
 		void setX(float newX);
@@ -84,8 +91,9 @@ namespace Game
 		void setName(std::string name) { this->name = name; }
 		void setTexturePath(std::string path) { this->objTexturePath = path; }
 		void setVisible(bool arg) { this->visible = arg; }
+		void setTextureRepeat(bool arg);
 
-		void setTexture(sf::Texture&);
+		void setTexture();
 		void setCurrentFrame(int);
 		void setFrameCount(int); 
 		void setFramePerSeconds(int); //set fps of actual animation

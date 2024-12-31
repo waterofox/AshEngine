@@ -10,8 +10,12 @@ Game::GameObject::GameObject(const GameObject& objB)
 	this->objMovement = objB.objMovement;
 	this->objSprite = objB.objSprite;
 	this->objTexture = objB.objTexture;
-	this->setTexture(this->objTexture);
+	this->setTexture();
 	this->visible = objB.visible;
+
+	this->textureRepeated = objB.textureRepeated;
+	this->setTextureRepeat(this->textureRepeated);
+	this->objSprite.setTextureRect(objB.objSprite.getTextureRect());
 
 	this->moveUp = objB.moveUp;
 	this->moveLeft = objB.moveLeft;
@@ -21,7 +25,7 @@ Game::GameObject::GameObject(const GameObject& objB)
 	this->name = objB.name;
 }
 GameObject::~GameObject() {}
-sf::Sprite GameObject::getSFMlobj() { return objSprite; }
+sf::Sprite& GameObject::getSFMlobj() { return objSprite; }
 sf::Vector2f GameObject::getPosition() { return objSprite.getGlobalBounds().getPosition(); }
 Sizef GameObject::getSize()
 {
@@ -54,12 +58,18 @@ void GameObject::setCurrentFrame(int newCurrentFrame)
 	currentFrame = newCurrentFrame;
 	objSprite.setTextureRect(sf::IntRect(int(currentFrame) * (objTexture.getSize().x / frameCount), 0, objTexture.getSize().y, objTexture.getSize().y));
 }
-void GameObject::setTexture(sf::Texture& newTexture)
+void Game::GameObject::setTextureRepeat(bool arg)
 {
-	setFrameCount(newTexture.getSize().x/newTexture.getSize().y);
+	objTexture.setRepeated(arg);
+	textureRepeated = arg;
+	objSprite.setTexture(objTexture);
+}
+void GameObject::setTexture()
+{
+	setFrameCount(objTexture.getSize().x/objTexture.getSize().y);
 	setCurrentFrame(0.f);
-	objSprite.setTexture(newTexture);
-	objSprite.setTextureRect(sf::IntRect(0,0,newTexture.getSize().y,newTexture.getSize().y));
+	objSprite.setTexture(objTexture);
+	objSprite.setTextureRect(sf::IntRect(0,0,objTexture.getSize().y,objTexture.getSize().y));
 	if (frameCount > 1 and isAnima) { enableAnimation(); }
 }
 void GameObject::setFramePerSeconds(int newFramePerSeconds) { framePerSeconds = newFramePerSeconds; }
@@ -77,7 +87,7 @@ void GameObject::updateTexture(std::string path)
 {
 	objTexture.loadFromFile(path);
 	objTexturePath = path;
-	setTexture(objTexture);
+	setTexture();
 }
 void GameObject::moveX(float plusX) { objMovement.x += plusX; objSprite.setPosition(objMovement); }
 void GameObject::moveY(float plusY) { objMovement.y += plusY; objSprite.setPosition(objMovement); }
