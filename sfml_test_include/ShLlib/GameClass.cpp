@@ -217,12 +217,12 @@ bool GameClass::loadScene(std::string path)
 		else if (key == "obj_heigth:")
 		{
 			sceneFile >> value;
-			newObj.getSFMlobj().setTextureRect(sf::IntRect(newObj.getPosition().x, newObj.getPosition().y, 0, std::stoi(value)));
+			newObj.getSFMlobj().setTextureRect(sf::IntRect(0, 0, 0, std::stoi(value)));
 		}
 		else if (key == "obj_width:")
 		{
 			sceneFile >> value;
-			newObj.getSFMlobj().setTextureRect(sf::IntRect(newObj.getPosition().x, newObj.getPosition().y, std::stoi(value), newObj.getSFMlobj().getTextureRect().height));
+			newObj.getSFMlobj().setTextureRect(sf::IntRect(0, 0, std::stoi(value), newObj.getSFMlobj().getTextureRect().height));
 		}
 		else if (key == "scale_x:")
 		{

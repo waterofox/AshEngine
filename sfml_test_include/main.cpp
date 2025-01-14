@@ -21,6 +21,7 @@ std::vector<std::string> texture{ "resources/GameAssets/animations/player/player
 									"resources/GameAssets/statickAssets/buildings/disPlita.png",
 									"resources/GameAssets/statickAssets/buildings/enaPlita.png" };
 
+//todo у тебя ошибка в названиии высоты проверь в конфиге сцены
 
 
 void playerCustomInput(GameClass* Game, sf::Keyboard::Key key, bool isPressed)
@@ -122,7 +123,7 @@ void controlScript(GameClass* Game,Game::GameObject* OBJECT)
 void plitaScript(GameClass* Game, Game::GameObject* plita)
 {
 	Game::GameObject* player = nullptr;
-	if (Game->getObject("player", player)) //todo rework this method
+	if (Game->getObject("player", player))
 	{
 		Game::cords playerCordsCheck;
 		Game::cords plitaCordsCheck;
