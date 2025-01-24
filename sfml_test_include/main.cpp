@@ -21,9 +21,6 @@ std::vector<std::string> texture{ "resources/GameAssets/animations/player/player
 									"resources/GameAssets/statickAssets/buildings/disPlita.png",
 									"resources/GameAssets/statickAssets/buildings/enaPlita.png" };
 
-//todo у тебя ошибка в названиии высоты проверь в конфиге сцены
-
-
 void playerCustomInput(GameClass* Game, sf::Keyboard::Key key, bool isPressed)
 {
 	Game::GameObject* player = nullptr;
@@ -46,33 +43,32 @@ enum CustomeEvents
 
 void plita_pressed_instruction(GameClass* Game, Game::GameObject* sender)
 {
-	Game::GameObject* OBJECT = nullptr;
-
-	if (sender->getName() == "plita_1")
+	if (sender->getName() == "plita")
 	{
-		if (!Game->getObject("desc", OBJECT)) { return; }
-		OBJECT->setVisible(true);
-		
-		Game->getObject("plita_1", OBJECT);
-		OBJECT->updateTexture(texture[PLITA_PRESSED]);
+		Game::GameObject* OBJ = nullptr;
+		if (Game->getObject("test", OBJ))
+		{
+			std::cout << "object is already exists";
+			return;
+		}
+		else
+		{
+			OBJ = new Game::GameObject();
+			OBJ->setName("test");
+			OBJ->setPosition(sf::Vector2f(200, 0));
+			OBJ->updateTexture("resources/GameAssets/animations/scene/fire.png");
+			OBJ->setFramePerSeconds(48);
+			OBJ->setScale(sf::Vector2f(2, 2));
+			OBJ->getSFMlobj().setTextureRect(sf::IntRect(0, 0, 64, 64));
+			OBJ->enableAnimation();
+			OBJ->setVisible(true);
+			Game->addObjectonScene(*OBJ, Game::objectType::dynamicType, 0);
+			delete OBJ;
+		}
+		OBJ = nullptr;
 	}
-	if (sender->getName() == "plita_2")
-	{
-		if (!Game->getObject("desc", OBJECT)) { return; }
-		OBJECT->setVisible(false);
-
-		Game->getObject("plita_2", OBJECT);
-		OBJECT->updateTexture(texture[PLITA_PRESSED]);
-	}
-	OBJECT = nullptr;
 }
 
-
-void rScritp(GameClass* Game, Game::GameObject* r)
-{
-	//r->getSFMlobj().setTextureRect(sf::IntRect(r->getPosition().x, r->getPosition().y, 128, 128));
-	std::cout << r->getSFMlobj().getTextureRect().width << ' ' << r->getSFMlobj().getTextureRect().height << '\n';
-}
 void controlScript(GameClass* Game,Game::GameObject* OBJECT)
 {
 	if (!(OBJECT->moveDown or OBJECT->moveUp or OBJECT->moveRight or OBJECT->moveLeft))
@@ -153,9 +149,8 @@ int main()
 	game.setPlayerInput(playerCustomInput);
 
 	game.addScript("preview", "player", controlScript); 
-	game.addScript("preview", "plita_1", plitaScript);
-	game.addScript("preview", "plita_2", plitaScript);
-	game.addScript("preview", "r", rScritp);
+	game.addScript("preview", "plita", plitaScript);
+
 
 
 

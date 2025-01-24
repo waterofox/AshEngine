@@ -42,7 +42,7 @@ private:
 	std::map<int, instruction> instructions;
 	std::queue<std::pair<int,Game::GameObject*>> gameEventQueue;		//todo think about this staff before write "setScene" method
 
-	sf::RenderWindow window; //main windiw
+	sf::RenderWindow window; //main window
 	unsigned int width;
 	unsigned int height;
 
@@ -71,6 +71,9 @@ public:
 
 
 	bool loadScene(std::string path);
+	void addSceneLay();
+	void addObjectonScene(Game::GameObject object,int objectType, int lay);
+	std::vector<Game::GameScene>*& getActualScene();
 
 	bool getObject(std::string name, Game::GameObject*& buffer);
 

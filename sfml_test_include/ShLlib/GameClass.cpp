@@ -214,7 +214,7 @@ bool GameClass::loadScene(std::string path)
 			newObj.updateTexture(value);
 			newObj.setTexturePath(value);
 		}
-		else if (key == "obj_heigth:")
+		else if (key == "obj_height:")
 		{
 			sceneFile >> value;
 			newObj.getSFMlobj().setTextureRect(sf::IntRect(0, 0, 0, std::stoi(value)));
@@ -309,6 +309,23 @@ bool GameClass::loadScene(std::string path)
 	isSceneReady = true;
 	return true;
 
+}
+
+void GameClass::addSceneLay()
+{
+	Game::GameScene newLay;
+	scene->push_back(newLay);
+}
+
+void GameClass::addObjectonScene(Game::GameObject object, int objectType, int lay)
+{
+	Game::GameScene& actualLay = (*scene)[lay];
+	actualLay.addObject(object.getName(),object,objectType);
+}
+
+std::vector<Game::GameScene>*& GameClass::getActualScene()
+{
+	return scene;
 }
 
 bool GameClass::getObject(std::string name, Game::GameObject*& buffer)
