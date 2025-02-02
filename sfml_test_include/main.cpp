@@ -1,7 +1,9 @@
 
-#include "ShLlib/ShLlib.h"
+#include "AshEngine/AshEngine.h"
 #include <iostream>
 #include <vector>
+
+#define playerSpeed 150
 
 enum textures
 {
@@ -20,17 +22,18 @@ std::vector<std::string> texture{ "resources/GameAssets/animations/player/player
 									"resources/GameAssets/animations/player/playerFrontWalk.png",
 									"resources/GameAssets/statickAssets/buildings/disPlita.png",
 									"resources/GameAssets/statickAssets/buildings/enaPlita.png" };
+using namespace ash;
 
-void playerCustomInput(GameClass* Game, sf::Keyboard::Key key, bool isPressed)
+void playerCustomInput(GameEngine* Game, sf::Keyboard::Key key, bool isPressed)
 {
-	Game::GameObject* player = nullptr;
+	ash::GameObject* player = nullptr;
 	if (!Game->getObject("player", player)) { return; };
 	switch (key)
 	{
-	case sf::Keyboard::D: {player->moveRight = isPressed; }break;
-	case sf::Keyboard::S: {player->moveDown = isPressed; }break;
-	case sf::Keyboard::A: {player->moveLeft = isPressed; }break;
-	case sf::Keyboard::W: {player->moveUp = isPressed; }break;
+	case sf::Keyboard::D: {(*player)["moveRight"] = std::to_string(int(isPressed)); }break;
+	case sf::Keyboard::S: {(*player)["moveDown"] = std::to_string(int(isPressed)); }break;
+	case sf::Keyboard::A: {(*player)["moveLeft"] = std::to_string(int(isPressed)); }break;
+	case sf::Keyboard::W: {(*player)["moveUp"] = std::to_string(int(isPressed)); }break;
 	default:
 		break;
 	}
@@ -41,11 +44,11 @@ enum CustomeEvents
 	plita_pressed = 1
 };
 
-void plita_pressed_instruction(GameClass* Game, Game::GameObject* sender)
+void plita_pressed_instruction(GameEngine* Game, ash::GameObject* sender)
 {
 	if (sender->getName() == "plita")
 	{
-		Game::GameObject* OBJ = nullptr;
+		ash::GameObject* OBJ = nullptr;
 		if (Game->getObject("test", OBJ))
 		{
 			std::cout << "object is already exists";
@@ -53,7 +56,7 @@ void plita_pressed_instruction(GameClass* Game, Game::GameObject* sender)
 		}
 		else
 		{
-			OBJ = new Game::GameObject();
+			OBJ = new ash::GameObject();
 			OBJ->setName("test");
 			OBJ->setPosition(sf::Vector2f(200, 0));
 			OBJ->updateTexture("resources/GameAssets/animations/scene/fire.png");
@@ -62,67 +65,44 @@ void plita_pressed_instruction(GameClass* Game, Game::GameObject* sender)
 			OBJ->getSFMlobj().setTextureRect(sf::IntRect(0, 0, 64, 64));
 			OBJ->enableAnimation();
 			OBJ->setVisible(true);
-			Game->addObjectonScene(*OBJ, Game::objectType::dynamicType, 0);
+			Game->addObjectonScene(*OBJ, ash::objectType::dynamicType, 0);
 			delete OBJ;
 		}
 		OBJ = nullptr;
 	}
 }
 
-void controlScript(GameClass* Game,Game::GameObject* OBJECT)
+void controlScript(GameEngine* Game,ash::GameObject* player)
 {
-	if (!(OBJECT->moveDown or OBJECT->moveUp or OBJECT->moveRight or OBJECT->moveLeft))
+	player->disableAnimation();
+	player->setCurrentFrame(1);
+
+	if (bool(std::stoi((*player)["moveUp"])))
 	{
-		if (OBJECT->isAnimated())
-		{
-			OBJECT->disableAnimation();
-			OBJECT->setCurrentFrame(1);
-		}
+		player->moveY(-playerSpeed*DELTA_TIME.asSeconds());
 	}
-	else
+	if (bool(std::stoi((*player)["moveDown"])))
 	{
-		if (!OBJECT->isAnimated()) { OBJECT->enableAnimation(); }
+		player->moveY(playerSpeed * DELTA_TIME.asSeconds());
+	}
+	if (bool(std::stoi((*player)["moveRight"])))
+	{
+		player->moveX(playerSpeed * DELTA_TIME.asSeconds());
+	}
+	if (bool(std::stoi((*player)["moveLeft"])))
+	{
+		player->moveX(-playerSpeed * DELTA_TIME.asSeconds());
 	}
 
-	//movement
-	if (OBJECT->moveRight) {
-
-		if (OBJECT->getTexture() != texture[PLAYER_RIGHT_WALK])
-		{
-			OBJECT->updateTexture(texture[PLAYER_RIGHT_WALK]);
-		}
-		OBJECT->moveX(150 * DELTA_TIME.asSeconds());
-	}
-	if (OBJECT->moveLeft) {
-		if (OBJECT->getTexture() != texture[PLAYER_LEFT_WALK])
-		{
-			OBJECT->updateTexture(texture[PLAYER_LEFT_WALK]);
-		}
-		OBJECT->moveX(-1 * 150 * DELTA_TIME.asSeconds());
-	}
-	if (OBJECT->moveUp) {
-		if (OBJECT->getTexture() != texture[PLAYER_UP_WALK])
-		{
-			OBJECT->updateTexture(texture[PLAYER_UP_WALK]);
-		}
-		OBJECT->moveY(-1 * 150 * DELTA_TIME.asSeconds());
-	}
-	if (OBJECT->moveDown) {
-		if (OBJECT->getTexture() != texture[PLAYER_DOWN_WALK])
-		{
-			OBJECT->updateTexture(texture[PLAYER_DOWN_WALK]);
-		}
-		OBJECT->moveY(150 * DELTA_TIME.asSeconds());
-	}
 }
 
-void plitaScript(GameClass* Game, Game::GameObject* plita)
+void plitaScript(GameEngine* Game, ash::GameObject* plita)
 {
-	Game::GameObject* player = nullptr;
+	ash::GameObject* player = nullptr;
 	if (Game->getObject("player", player))
 	{
-		Game::cords playerCordsCheck;
-		Game::cords plitaCordsCheck;
+		ash::cords playerCordsCheck;
+		ash::cords plitaCordsCheck;
 
 		plitaCordsCheck.x = plita->getPosition().x + (plita->getSize().width / 2);
 		plitaCordsCheck.y = plita->getPosition().y + (plita->getSize().height - 20);
@@ -148,7 +128,7 @@ void plitaScript(GameClass* Game, Game::GameObject* plita)
 int main()
 {
 
-	GameClass game(640, 480, 60);
+	GameEngine game(640, 480, 60);
 
 	game.setPlayerInput(playerCustomInput);
 

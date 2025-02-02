@@ -5,7 +5,7 @@
 #include <iostream>
 #include <map>
 
-namespace Game
+namespace ash
 {
 	enum objectType
 	{
@@ -43,13 +43,6 @@ namespace Game
 		float currentFrame = 0.f;
 		int framePerSeconds = 24;
 	public:
-
-		//move
-		bool moveUp = false;
-		bool moveRight = false;
-		bool moveDown = false;
-		bool moveLeft = false;
-
 		GameObject();
 		GameObject( const GameObject& objB);
 		GameObject& operator=(const GameObject& objB)
@@ -67,11 +60,6 @@ namespace Game
 			this->textureRepeated = objB.textureRepeated;
 			this->setTextureRepeat(this->textureRepeated);
 			this->objSprite.setTextureRect(objB.objSprite.getTextureRect());
-
-			this->moveUp = objB.moveUp;
-			this->moveLeft = objB.moveLeft;
-			this->moveRight = objB.moveRight;
-			this->moveDown = objB.moveDown;
 
 			this->name = objB.name;
 

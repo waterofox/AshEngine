@@ -6,9 +6,9 @@
 #include <vector>
 #include <string>
 
-namespace Game
+namespace ash
 {
-	class GameScene 
+	class GameLayout 
 	{
 	private:
 		std::map<std::string, GameObject> dynamicObjects;
@@ -17,19 +17,19 @@ namespace Game
 
 		void addObject(std::string uniqueName, GameObject obj,int type); //add object to scene
 		void removeObject(std::string uniqueName); //remove object from scene
-		bool getObject(std::string uniqueName,Game::GameObject*& buffer); //get object from scene by name
+		bool getObject(std::string uniqueName,GameObject*& buffer); //get object from scene by name
 		void sceneAnimationsUpdate(sf::Time deltaTime);
 		void renderScene(sf::RenderWindow& window);
 
-		GameScene() {}
-		GameScene(const Game::GameScene& SceneB)
+		GameLayout() {}
+		GameLayout(const GameLayout& SceneB)
 		{
 			dynamicObjects = SceneB.dynamicObjects;
 			staticObjects = SceneB.staticObjects;
 		}
-		~GameScene() {}
+		~GameLayout() {}
 
-		Game::GameScene& operator=(const Game::GameScene& SceneB)
+		GameLayout& operator=(const GameLayout& SceneB)
 		{
 			dynamicObjects = SceneB.dynamicObjects;
 			staticObjects = SceneB.staticObjects;

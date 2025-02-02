@@ -1,25 +1,25 @@
-#include "GameScene.h"
+#include "GameLayout.h"
 
-void Game::GameScene::addObject(std::string uniqueName, GameObject obj,int type)
+void ash::GameLayout::addObject(std::string uniqueName, GameObject obj,int type)
 {
 	switch (type)
 	{
-	case Game::objectType::dynamicType: {
+	case ash::objectType::dynamicType: {
 		std::pair<std::string, GameObject> newObj(uniqueName, obj);
 		dynamicObjects.insert(newObj);
 	}break;
-	case Game::objectType::staticType: {staticObjects.push_back(obj); }break;
+	case ash::objectType::staticType: {staticObjects.push_back(obj); }break;
 	default:
 		break;
 	}
 }
 
-void Game::GameScene::removeObject(std::string uniqueName)
+void ash::GameLayout::removeObject(std::string uniqueName)
 {
 	dynamicObjects.erase(uniqueName);
 }
 
-bool Game::GameScene::getObject(std::string uniqueName, Game::GameObject*& buffer)
+bool ash::GameLayout::getObject(std::string uniqueName, ash::GameObject*& buffer)
 {
 	if (dynamicObjects.find(uniqueName) != dynamicObjects.end())
 	{
@@ -29,7 +29,7 @@ bool Game::GameScene::getObject(std::string uniqueName, Game::GameObject*& buffe
 	else { return false; }
 }
 
-void Game::GameScene::sceneAnimationsUpdate(sf::Time deltaTime)
+void ash::GameLayout::sceneAnimationsUpdate(sf::Time deltaTime)
 {
 	for (auto obj = staticObjects.begin(); obj < staticObjects.end(); ++obj)
 	{
@@ -44,7 +44,7 @@ void Game::GameScene::sceneAnimationsUpdate(sf::Time deltaTime)
 	}
 }
 
-void Game::GameScene::renderScene(sf::RenderWindow& window)
+void ash::GameLayout::renderScene(sf::RenderWindow& window)
 {
 	for (auto obj = staticObjects.begin(); obj < staticObjects.end(); ++obj)
 	{

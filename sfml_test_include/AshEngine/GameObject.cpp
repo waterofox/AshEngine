@@ -1,7 +1,7 @@
 #include "GameObject.h"
-using namespace Game;
+using namespace ash;
 GameObject::GameObject() {}
-Game::GameObject::GameObject(const GameObject& objB)
+GameObject::GameObject(const GameObject& objB)
 {
 	this->currentFrame = objB.currentFrame;
 	this->frameCount = objB.frameCount;
@@ -16,11 +16,6 @@ Game::GameObject::GameObject(const GameObject& objB)
 	this->textureRepeated = objB.textureRepeated;
 	this->setTextureRepeat(this->textureRepeated);
 	this->objSprite.setTextureRect(objB.objSprite.getTextureRect());
-
-	this->moveUp = objB.moveUp;
-	this->moveLeft = objB.moveLeft;
-	this->moveRight = objB.moveRight;
-	this->moveDown = objB.moveDown;
 
 	this->name = objB.name;
 
@@ -45,13 +40,13 @@ void GameObject::setPosition(sf::Vector2f newPosition)
 	objSprite.setPosition(newPosition);
 	objMovement = newPosition;
 }
-void Game::GameObject::setX(float newX)
+void GameObject::setX(float newX)
 {
 	sf::Vector2f newPos = this->getPosition();
 	newPos.x = newX;
 	this->setPosition(newPos);
 }
-void Game::GameObject::setY(float newY)
+void GameObject::setY(float newY)
 {
 	sf::Vector2f newPos = this->getPosition();
 	newPos.y = newY;
@@ -64,7 +59,7 @@ void GameObject::setCurrentFrame(int newCurrentFrame)
 	currentFrame = newCurrentFrame;
 	objSprite.setTextureRect(sf::IntRect(int(currentFrame) * (objTexture.getSize().x / frameCount), 0, objTexture.getSize().y, objTexture.getSize().y));
 }
-void Game::GameObject::setTextureRepeat(bool arg)
+void GameObject::setTextureRepeat(bool arg)
 {
 	objTexture.setRepeated(arg);
 	textureRepeated = arg;
@@ -99,13 +94,13 @@ void GameObject::moveX(float plusX) { objMovement.x += plusX; objSprite.setPosit
 void GameObject::moveY(float plusY) { objMovement.y += plusY; objSprite.setPosition(objMovement); }
 void GameObject::move(float plusX, float plusY) { objMovement.x += plusX; objMovement.y += plusY; objSprite.setPosition(objMovement);}
 
-void Game::GameObject::setPropertiesSet(std::map<std::string, std::string> newPattern)
+void GameObject::setPropertiesSet(std::map<std::string, std::string> newPattern)
 {
 	if (customProperties != nullptr) { delete customProperties; }
 	customProperties = new std::map<std::string, std::string>(newPattern);
 }
 
-std::string& Game::GameObject::operator[](std::string& key)
+std::string& GameObject::operator[](std::string& key)
 {
 	if (customProperties == nullptr) 
 	{ 
@@ -121,7 +116,7 @@ std::string& Game::GameObject::operator[](std::string& key)
 	return stats[key];
 }
 
-std::string Game::GameObject::operator[](std::string& key) const
+std::string GameObject::operator[](std::string& key) const
 {
 	if (customProperties == nullptr) 
 	{ 
@@ -137,7 +132,7 @@ std::string Game::GameObject::operator[](std::string& key) const
 	return stats[key];
 }
 
-std::string& Game::GameObject::operator[](const char* key)
+std::string& GameObject::operator[](const char* key)
 {
 	if (customProperties == nullptr)
 	{

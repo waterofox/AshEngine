@@ -1,9 +1,10 @@
-#include "GameClass.h"
-void GameClass::run()
+#include "GameEngine.h"
+using namespace ash;
+void GameEngine::run()
 {
 	//это только проверка на то, чтоб при запуске окна загружалось хоть что-то;
 	if (!isSceneReady) { std::cout << "ENGINE_ERROR: no loaded scene" << '\n'; return; }
-	window.create(sf::VideoMode(width, height), "GameClassWindow");
+	window.create(sf::VideoMode(width, height), "GameEngineWindow");
 	window.setFramerateLimit(framePerSeconds);
 
 	window.setVerticalSyncEnabled(true);
@@ -28,7 +29,7 @@ void GameClass::run()
 	}
 }
 
-void GameClass::eventHandling()
+void GameEngine::eventHandling()
 {
 	if (window.pollEvent(actualEvent))
 	{
@@ -64,16 +65,16 @@ void GameClass::eventHandling()
 	}
 }
 
-void GameClass::update()
+void GameEngine::update()
 {
 	//update camera position (target of player)
 	if (dynamicCamera) // only if dynamicCamera is true;
 	{
-		Game::GameObject* player = nullptr;
+		ash::GameObject* player = nullptr;
 		if (this->getObject("player", player))
 		{
 			sf::Vector2f playerPosition = player->getPosition();
-			Game::Sizef playerSize = player->getSize();
+			ash::Sizef playerSize = player->getSize();
 			camera.setCenter(sf::Vector2f(playerPosition.x + (playerSize.width / 2), playerPosition.y + (playerSize.height / 2)));
 		}
 		player = nullptr;
@@ -87,7 +88,7 @@ void GameClass::update()
 	//events
 	while (!gameEventQueue.empty())
 	{
-		std::pair<int, Game::GameObject*>& sender = gameEventQueue.front();
+		std::pair<int, ash::GameObject*>& sender = gameEventQueue.front();
 		auto& instructionPtr = instructions[sender.first];
 		instructionPtr(this, sender.second);
 		gameEventQueue.pop();
@@ -105,7 +106,7 @@ void GameClass::update()
 	}
 }
 
-void GameClass::render()
+void GameEngine::render()
 {
 	//рендер
 	window.clear();
@@ -117,19 +118,19 @@ void GameClass::render()
 	window.display();
 }
 
-void GameClass::playerInputStandart(sf::Keyboard::Key key, bool isPressed)
+void GameEngine::playerInputStandart(sf::Keyboard::Key key, bool isPressed)
 {
 	return;
 }
 
-bool GameClass::loadScene(std::string path)
+bool GameEngine::loadScene(std::string path)
 {
 	std::ifstream sceneFile(path);
 	if (!sceneFile.is_open()) { return false; }
 	if (scene != nullptr) { delete scene; }
 	isSceneReady = false;
-	scene = new std::vector<Game::GameScene>;
-	Game::GameObject newObj;
+	scene = new std::vector<ash::GameLayout>;
+	ash::GameObject newObj;
 	std::string key;
 	std::string value;
 	std::map<std::string, std::string> propertiesBuffer;
@@ -191,7 +192,7 @@ bool GameClass::loadScene(std::string path)
 		else if (key == "lay")
 		{
 			++layIndex;
-			Game::GameScene newLay;
+			ash::GameLayout newLay;
 			scene->push_back(newLay);
 		}
 		else if (key == "name:")
@@ -295,12 +296,12 @@ bool GameClass::loadScene(std::string path)
 			if (value == "dynamic")
 			{
 				newObj.setVisible(true);
-				(*scene)[layIndex].addObject(newObj.getName(), newObj, Game::objectType::dynamicType);
+				(*scene)[layIndex].addObject(newObj.getName(), newObj, ash::objectType::dynamicType);
 			}
 			else if(value == "static")
 			{
 				newObj.setVisible(true);
-				(*scene)[layIndex].addObject(newObj.getName(), newObj, Game::objectType::staticType);
+				(*scene)[layIndex].addObject(newObj.getName(), newObj, ash::objectType::staticType);
 			}
 			else
 			{
@@ -322,29 +323,29 @@ bool GameClass::loadScene(std::string path)
 
 }
 
-void GameClass::addSceneLay()
+void GameEngine::addSceneLay()
 {
-	Game::GameScene newLay;
+	ash::GameLayout newLay;
 	scene->push_back(newLay);
 }
 
-void GameClass::addObjectonScene(Game::GameObject object, int objectType, int lay)
+void GameEngine::addObjectonScene(ash::GameObject object, int objectType, int lay)
 {
-	Game::GameScene& actualLay = (*scene)[lay];
+	ash::GameLayout& actualLay = (*scene)[lay];
 	actualLay.addObject(object.getName(),object,objectType);
 }
 
-std::vector<Game::GameScene>*& GameClass::getActualScene()
+std::vector<ash::GameLayout>*& GameEngine::getActualScene()
 {
 	return scene;
 }
 
-void GameClass::addPropertiesSetsConfig(const std::string& path)
+void GameEngine::addPropertiesSetsConfig(const std::string& path)
 {
 	propertiesSetsConfigPath = path;
 }
 
-std::map<std::string, std::string> GameClass::getFinishedProperties(const std::string& name)
+std::map<std::string, std::string> GameEngine::getFinishedProperties(const std::string& name)
 {
 	std::map<std::string, std::string> ans;
 	if (propertiesSetsConfigPath.length() == 0)
@@ -385,7 +386,7 @@ std::map<std::string, std::string> GameClass::getFinishedProperties(const std::s
 	return ans;
 }
 
-bool GameClass::getObject(std::string name, Game::GameObject*& buffer)
+bool GameEngine::getObject(std::string name, ash::GameObject*& buffer)
 {
 	for (auto lay = scene->begin(); lay < scene->end(); ++lay)
 	{
@@ -397,40 +398,40 @@ bool GameClass::getObject(std::string name, Game::GameObject*& buffer)
 	return false;
 }
 
-void GameClass::addScript(std::string sceneName,std::string objectName, script scriptPtr)
+void GameEngine::addScript(std::string sceneName,std::string objectName, script scriptPtr)
 {
 	std::vector<std::pair<std::string,script>>& actualScripts = scripts[sceneName];
 	actualScripts.push_back(std::pair<std::string, script>(objectName, scriptPtr));
 }
 
-void GameClass::setPlayerInput(inputMethod method)
+void GameEngine::setPlayerInput(inputMethod method)
 {
 	std::pair<int, inputMethod> newInput(0, method);
 	this->input = newInput;
 	this->isCustomInputLoaded = true;
 }
 
-void GameClass::addInstruction(int id, instruction instructionPtr)
+void GameEngine::addInstruction(int id, instruction instructionPtr)
 {
 	instructions.insert(std::pair<int, instruction>(id, instructionPtr));
 }
 
-void GameClass::emitGameEvent(int eventId, Game::GameObject* sender)
+void GameEngine::emitGameEvent(int eventId, ash::GameObject* sender)
 {
-	gameEventQueue.push(std::pair<int, Game::GameObject*>(eventId, sender));
+	gameEventQueue.push(std::pair<int, ash::GameObject*>(eventId, sender));
 }
 
-sf::Vector2u GameClass::getWindowSize()
+sf::Vector2u GameEngine::getWindowSize()
 {
 	return sf::Vector2u(width,height);
 }
 
-sf::Time GameClass::getDeltaTime()
+sf::Time GameEngine::getDeltaTime()
 {
 	return this->fixedDeltaTime;
 }
 
-sf::View& GameClass::getCamera()
+sf::View& GameEngine::getCamera()
 {
 	return this->camera;
 }

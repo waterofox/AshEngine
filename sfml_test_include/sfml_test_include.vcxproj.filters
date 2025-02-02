@@ -18,27 +18,27 @@
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="ShLlib\GameObject.cpp">
+    <ClCompile Include="AshEngine\GameEngine.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="ShLlib\GameScene.cpp">
+    <ClCompile Include="AshEngine\GameLayout.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="ShLlib\GameClass.cpp">
+    <ClCompile Include="AshEngine\GameObject.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ShLlib\GameObject.h">
+    <ClInclude Include="AshEngine\AshEngine.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="ShLlib\GameScene.h">
+    <ClInclude Include="AshEngine\GameEngine.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="ShLlib\ShLlib.h">
+    <ClInclude Include="AshEngine\GameLayout.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="ShLlib\GameClass.h">
+    <ClInclude Include="AshEngine\GameObject.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
