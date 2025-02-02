@@ -1,8 +1,9 @@
 //SFML includes:
 //  
-#include <iostream>
 #include <SFML/Graphics.hpp>
 
+#include <iostream>
+#include <map>
 
 namespace Game
 {
@@ -31,6 +32,9 @@ namespace Game
 		sf::Vector2f objMovement;
 		std::string name = "none";
 		bool textureRepeated = false;
+
+		//properties
+		std::map<std::string, std::string>* customProperties = nullptr;
 		
 		bool visible = true;
 		//animation
@@ -70,6 +74,13 @@ namespace Game
 			this->moveDown = objB.moveDown;
 
 			this->name = objB.name;
+
+			if (this->customProperties != nullptr) { delete customProperties; customProperties = nullptr; }
+			if (objB.customProperties != nullptr)
+			{
+				this->customProperties = new std::map<std::string, std::string>(*objB.customProperties);
+			}
+
 			return *this;
 		}
 		~GameObject();
@@ -104,6 +115,11 @@ namespace Game
 		void moveX(float plusX); //Ox move
 		void moveY(float plusY); //Oy move
 		void move(float plusX, float plusY);
+
+		void setPropertiesSet(std::map<std::string, std::string>);
+		std::string& operator[](std::string& key);
+		std::string  operator[](std::string& key) const;
+		std::string& operator[](const char* key);
 
 		//chek
 		bool isAnimated(); 

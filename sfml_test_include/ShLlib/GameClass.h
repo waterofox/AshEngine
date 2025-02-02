@@ -50,6 +50,7 @@ private:
 	std::vector<Game::GameScene>* scene = nullptr;
 	std::string sceneName = "";
 	bool isSceneReady = false;
+	std::string propertiesSetsConfigPath;
 
 	sf::View camera; //camera
 	bool dynamicCamera = false;
@@ -74,6 +75,9 @@ public:
 	void addSceneLay();
 	void addObjectonScene(Game::GameObject object,int objectType, int lay);
 	std::vector<Game::GameScene>*& getActualScene();
+
+	void addPropertiesSetsConfig(const std::string& path);
+	std::map<std::string, std::string> getFinishedProperties(const std::string& name);
 
 	bool getObject(std::string name, Game::GameObject*& buffer);
 

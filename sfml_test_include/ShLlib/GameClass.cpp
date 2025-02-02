@@ -132,6 +132,7 @@ bool GameClass::loadScene(std::string path)
 	Game::GameObject newObj;
 	std::string key;
 	std::string value;
+	std::map<std::string, std::string> propertiesBuffer;
 	int layIndex = -1;
 
 
@@ -278,18 +279,28 @@ bool GameClass::loadScene(std::string path)
 			sceneFile >> value;
 			newObj.setFramePerSeconds(std::stoi(value));
 		}
+		else if (key == "properties_set:")
+		{
+			if (!propertiesBuffer.empty()) { propertiesBuffer.clear(); }
+			sceneFile >> value;
+			propertiesBuffer = getFinishedProperties(value);
+			if (!propertiesBuffer.empty())
+			{
+				newObj.setPropertiesSet(propertiesBuffer);
+			}
+		}
 		else if (key == "type:")
 		{
 			sceneFile >> value;
 			if (value == "dynamic")
 			{
-				(*scene)[layIndex].addObject(newObj.getName(), newObj, Game::objectType::dynamicType);
 				newObj.setVisible(true);
+				(*scene)[layIndex].addObject(newObj.getName(), newObj, Game::objectType::dynamicType);
 			}
 			else if(value == "static")
 			{
-				(*scene)[layIndex].addObject(newObj.getName(), newObj, Game::objectType::staticType);
 				newObj.setVisible(true);
+				(*scene)[layIndex].addObject(newObj.getName(), newObj, Game::objectType::staticType);
 			}
 			else
 			{
@@ -326,6 +337,52 @@ void GameClass::addObjectonScene(Game::GameObject object, int objectType, int la
 std::vector<Game::GameScene>*& GameClass::getActualScene()
 {
 	return scene;
+}
+
+void GameClass::addPropertiesSetsConfig(const std::string& path)
+{
+	propertiesSetsConfigPath = path;
+}
+
+std::map<std::string, std::string> GameClass::getFinishedProperties(const std::string& name)
+{
+	std::map<std::string, std::string> ans;
+	if (propertiesSetsConfigPath.length() == 0)
+	{
+		std::cout << "PROPERTY ERROR<" << name << ">: no added config" << std::endl;
+		return ans;
+	}
+	std::ifstream config(propertiesSetsConfigPath);
+	if (!config.is_open())
+	{
+		std::cout << "PROPERTY ERROR<" << name << ">: incorrect file path" << std::endl;
+		return ans;
+	}
+	std::string key;
+	std::string value;
+	int propertiesCount;
+	while (!config.eof())
+	{
+		config >> key;
+		if (key != name + ':')
+		{
+			continue;
+		}
+		config >> value;
+		propertiesCount = std::stoi(value);
+		for (int i = 0; i < propertiesCount; ++i)
+		{
+			config >> key;
+			config >> value;
+			key.pop_back();
+			ans.insert(std::pair<std::string,std::string>(key,value));
+		}
+	}
+	if (ans.empty())
+	{
+		std::cout << "PROPERTY ERROR<" << name << ">: incorrect name of set" << std::endl;
+	}
+	return ans;
 }
 
 bool GameClass::getObject(std::string name, Game::GameObject*& buffer)

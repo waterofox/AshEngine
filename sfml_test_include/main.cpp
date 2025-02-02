@@ -133,7 +133,11 @@ void plitaScript(GameClass* Game, Game::GameObject* plita)
 		if (playerCordsCheck.x >= plitaCordsCheck.x - 20 and playerCordsCheck.x <= plitaCordsCheck.x + 20 and \
 			playerCordsCheck.y >= plitaCordsCheck.y - 10 and playerCordsCheck.y <= plitaCordsCheck.y + 10) 
 		{
-			Game->emitGameEvent(plita_pressed, plita);
+			if ((*plita)["is_active"] == "false")
+			{
+				(*plita)["is_active"] = "true";
+				Game->emitGameEvent(plita_pressed, plita);
+			}
 		}
 		
 		player = nullptr;
@@ -151,10 +155,9 @@ int main()
 	game.addScript("preview", "player", controlScript); 
 	game.addScript("preview", "plita", plitaScript);
 
-
-
-
 	game.addInstruction(plita_pressed, plita_pressed_instruction);
+
+	game.addPropertiesSetsConfig("resources/properties.txt");
 
 	game.loadScene("resources/scenes/previewScene.txt");
 	game.run();

@@ -23,6 +23,12 @@ Game::GameObject::GameObject(const GameObject& objB)
 	this->moveDown = objB.moveDown;
 
 	this->name = objB.name;
+
+	if (this->customProperties != nullptr) { delete customProperties; customProperties = nullptr; }
+	if (objB.customProperties != nullptr)
+	{
+		this->customProperties = new std::map<std::string, std::string>(*objB.customProperties);
+	}
 }
 GameObject::~GameObject() {}
 sf::Sprite& GameObject::getSFMlobj() { return objSprite; }
@@ -92,3 +98,59 @@ void GameObject::updateTexture(std::string path)
 void GameObject::moveX(float plusX) { objMovement.x += plusX; objSprite.setPosition(objMovement); }
 void GameObject::moveY(float plusY) { objMovement.y += plusY; objSprite.setPosition(objMovement); }
 void GameObject::move(float plusX, float plusY) { objMovement.x += plusX; objMovement.y += plusY; objSprite.setPosition(objMovement);}
+
+void Game::GameObject::setPropertiesSet(std::map<std::string, std::string> newPattern)
+{
+	if (customProperties != nullptr) { delete customProperties; }
+	customProperties = new std::map<std::string, std::string>(newPattern);
+}
+
+std::string& Game::GameObject::operator[](std::string& key)
+{
+	if (customProperties == nullptr) 
+	{ 
+		std::cout << "OBJECT ERROR<" << name << ">: No custom properties" << std::endl;
+		return key;
+	}
+	std::map<std::string, std::string>&  stats = *(customProperties);
+	if (stats.find(key) == stats.end()) 
+	{ 
+		std::cout << "OBJECT ERROR<" << name << ">: No property <" << key << "> in custom properties" << std::endl;
+		return key; 
+	}
+	return stats[key];
+}
+
+std::string Game::GameObject::operator[](std::string& key) const
+{
+	if (customProperties == nullptr) 
+	{ 
+		std::cout << "OBJECT ERROR<" << name << ">: No custom properties" << std::endl; 
+		return key; 
+	}
+	std::map<std::string, std::string>& stats = *(customProperties);
+	if (stats.find(key) == stats.end()) 
+	{ 
+		std::cout << "OBJECT ERROR<" << name << ">: No property <" << key << "> in custom properties" << std::endl;
+		return key; 
+	}
+	return stats[key];
+}
+
+std::string& Game::GameObject::operator[](const char* key)
+{
+	if (customProperties == nullptr)
+	{
+		std::cout << "OBJECT ERROR<" << name << ">: No custom properties" << std::endl;
+		std::string stringKey(key);
+		return stringKey;
+	}
+	std::map<std::string, std::string>& stats = *(customProperties);
+	if (stats.find(key) == stats.end())
+	{
+		std::cout << "OBJECT ERROR<" << name << ">: No property <" << key << "> in custom properties" << std::endl;
+		std::string stringKey(key);
+		return stringKey;
+	}
+	return stats[key];
+}
