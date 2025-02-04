@@ -74,24 +74,38 @@ void plita_pressed_instruction(GameEngine* Game, ash::GameObject* sender)
 
 void controlScript(GameEngine* Game,ash::GameObject* player)
 {
-	player->disableAnimation();
-	player->setCurrentFrame(1);
-
+	bool moveFlag = false;
 	if (bool(std::stoi((*player)["moveUp"])))
 	{
 		player->moveY(-playerSpeed*DELTA_TIME.asSeconds());
+		if (player->getTexturePath() != texture[textures::PLAYER_UP_WALK])
+		{
+		}
+		moveFlag = true;
 	}
 	if (bool(std::stoi((*player)["moveDown"])))
 	{
 		player->moveY(playerSpeed * DELTA_TIME.asSeconds());
+		moveFlag = true;
 	}
 	if (bool(std::stoi((*player)["moveRight"])))
 	{
 		player->moveX(playerSpeed * DELTA_TIME.asSeconds());
+		moveFlag = true;
 	}
 	if (bool(std::stoi((*player)["moveLeft"])))
 	{
 		player->moveX(-playerSpeed * DELTA_TIME.asSeconds());
+		moveFlag = true;
+	}
+	if (!moveFlag)
+	{
+		player->disableAnimation();
+		player->setCurrentFrame(1);
+	}
+	else
+	{
+		player->enableAnimation();
 	}
 
 }

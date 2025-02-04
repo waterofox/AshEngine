@@ -25,24 +25,32 @@ namespace ash
 	class GameObject
 	{
 		private:
-		//obj
+		//the core
 		sf::Sprite objSprite; 
+		std::string name = "none";
+
+		//texturing
 		sf::Texture objTexture;
 		std::string objTexturePath;
-		sf::Vector2f objMovement;
-		std::string name = "none";
 		bool textureRepeated = false;
+		bool visible = true;
+
 
 		//properties
 		std::map<std::string, std::string>* customProperties = nullptr;
+		sf::Vector2f objMovement; 
 		
-		bool visible = true;
 		//animation
 		bool isAnima = false;
 		int frameCount = 1;
 		float currentFrame = 0.f;
 		int framePerSeconds = 24;
+
+		//process methods
+		void setTexture();
+
 	public:
+		//constructors
 		GameObject();
 		GameObject( const GameObject& objB);
 		GameObject& operator=(const GameObject& objB)
@@ -72,46 +80,57 @@ namespace ash
 			return *this;
 		}
 		~GameObject();
-		//get
-		sf::Sprite& getSFMlobj(); //return sfml's core of object
+
+		//geters <the core>
+		sf::Sprite& getSFMlobj() { return objSprite; }; //return sfml's core of object
+		std::string getName() { return this->name; }
+
+		//getters <texturing>
+		sf::Texture& getTexture() { return this->objTexture; }
+		std::string getTexturePath() { return this->objTexturePath; }
+		bool isVisible() { return this->visible; }
+		bool isTextureRepeated() { return this->textureRepeated; }
+
+		//getters <properties>
+		std::string& operator[](std::string& key);
+		std::string  operator[](std::string& key) const;
+		std::string& operator[](const char* key);
+		std::string  operator[](const char* key)  const;
 		sf::Vector2f getPosition(); 
 		Sizef getSize(); 
-		std::string getName() { return this->name; }
-		std::string getTexture() { return this->objTexturePath; }
 
-		bool isVisible() { return this->visible; }
-		bool isTextureRepeated() { return this->textureRepeated;}
+		//getters <animation>
+		bool isAnimated() { return isAnima; }
+		int getFrameCount() { return this->frameCount; }
+		float getCurrentFrame() { return this->currentFrame; }
+		int getFramePresSeconds() { return this->framePerSeconds; }
 
-		//set
-		void setPosition(sf::Vector2f); //set object position
-		void setX(float newX);
-		void setY(float newY);
-		void setScale(sf::Vector2f); 
+		//setters <the core>
 		void setName(std::string name) { this->name = name; }
+
+		//settres <texturing>
 		void setTexturePath(std::string path) { this->objTexturePath = path; }
 		void setVisible(bool arg) { this->visible = arg; }
 		void setTextureRepeat(bool arg);
+		void updateTexture(std::string); //todo rename to "loadTexture"
 
-		void setTexture();
-		void setCurrentFrame(int);
-		void setFrameCount(int); 
-		void setFramePerSeconds(int); //set fps of actual animation
-		void disableAnimation();
-		void enableAnimation(); 
-		void updateTexture(std::string); //load texture by path
-		
+		//setters <properties>
+		void setPropertiesSet(std::map<std::string, std::string>);
+		void setScale(sf::Vector2f newScale) { objSprite.setScale(newScale); }
+		void setPosition(sf::Vector2f); //set object position
+		void setX(float newX);
+		void setY(float newY);
 		void moveX(float plusX); //Ox move
 		void moveY(float plusY); //Oy move
 		void move(float plusX, float plusY);
 
-		void setPropertiesSet(std::map<std::string, std::string>);
-		std::string& operator[](std::string& key);
-		std::string  operator[](std::string& key) const;
-		std::string& operator[](const char* key);
+		//settres <animation>
+		void setCurrentFrame(int);
+		void setFrameCount(int newFrameCount) { frameCount = newFrameCount; }
+		void setFramePerSeconds(int newFramePerSeconds) { framePerSeconds = newFramePerSeconds; }
+		void disableAnimation() { isAnima = false; }
+		void enableAnimation() { isAnima = true; }
+		void updateAnimation(sf::Time deltaTime); //todo rename to "playAnimation"
 
-		//chek
-		bool isAnimated(); 
-		//proc
-		void updateAnimation(sf::Time deltaTime); //animation play method
 	};
 }
