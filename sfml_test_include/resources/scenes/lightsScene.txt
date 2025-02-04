@@ -1,0 +1,19 @@
+scene: lights
+
+camera: static fullscreen: true camera_width: 100 camera_height: 100 camera_X: 100 camera_Y: 100
+
+lay
+name: light_green X: 100 Y: 100 url: resources/GameAssets/animations/scene/greenLight.png obj_height: 64 obj_width: 64 scale_x: 1 scale_y: 1 repeated: false visible: true animated: false fps: 1 properties_set: light_properties type: dynamic
+name: light_red X: 164 Y: 100 url: resources/GameAssets/animations/scene/redLight.png obj_height: 64 obj_width: 64 scale_x: 1 scale_y: 1 repeated: false visible: true animated: false fps: 1 properties_set: light_properties type: dynamic
+name: light_blue X: 228 Y: 100 url: resources/GameAssets/animations/scene/blueLight.png obj_height: 64 obj_width: 64 scale_x: 1 scale_y: 1 repeated: false visible: true animated: false fps: 1 properties_set: light_properties type: dynamic
+name: light_yellow X: 292 Y: 100 url: resources/GameAssets/animations/scene/yellowLight.png obj_height: 64 obj_width: 64 scale_x: 1 scale_y: 1 repeated: false visible: true animated: false fps: 1  properties_set: light_properties type: dynamic
+
+lay
+name: plita_green X: 68 Y: 100 url: resources/GameAssets/statickAssets/buildings/disPlita.png obj_height: 64 obj_width: 64 scale_x: 2 scale_y: 2 repeated: false animated: false fps: 1 properties_set: plita_properties type: dynamic
+name: plita_red X: 134 Y: 100 url: resources/GameAssets/statickAssets/buildings/disPlita.png obj_height: 64 obj_width: 64 scale_x: 2 scale_y: 2 repeated: false animated: false fps: 1 properties_set: plita_properties type: dynamic
+name: plita_blue X: 200 Y: 100 url: resources/GameAssets/statickAssets/buildings/disPlita.png obj_height: 64 obj_width: 64 scale_x: 2 scale_y: 2 repeated: false animated: false fps: 1 properties_set: plita_properties type: dynamic
+name: plita_yellow X: 266 Y: 100 url: resources/GameAssets/statickAssets/buildings/disPlita.png obj_height: 64 obj_width: 64 scale_x: 2 scale_y: 2 repeated: false animated: false fps: 1 properties_set: plita_properties type: dynamic
+
+
+lay
+name: player X: 0 Y: 0  url: resources/GameAssets/animations/player/playerFrontWalk.png obj_height: 64 obj_width: 64 scale_x: 2 scale_y: 2 repeated: false animated: true fps: 7 properties_set: move_properties type: dynamic

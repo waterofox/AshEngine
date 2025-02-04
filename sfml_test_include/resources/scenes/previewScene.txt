@@ -25,9 +25,9 @@ name: el1 X: 0 Y: -140 url: resources/GameAssets/statickAssets/terrain/elka.png 
 name: el1 X: 40 Y: -140 url: resources/GameAssets/statickAssets/terrain/elka.png obj_height: 64 obj_width: 320 scale_x: 2.5 scale_y: 2.5 repeated: true animated: false fps: 1 type: static
 
 
-name: Ash X: 256 Y: -96 url: resources/GameAssets/animations/idle/ahIdle.png obj_height: 64 obj_width: 64 scale_x: 2 scale_y: 2 repeated: false animated: true fps: 48 type: static
+name: Ash X: 256 Y: -96 url: resources/GameAssets/animations/idle/ahIdle.png obj_height: 64 obj_width: 64 scale_x: 2 scale_y: 2 repeated: false animated: true fps: 12 type: static
 name: plita X: 256 Y: 0 url: resources/GameAssets/statickAssets/buildings/disPlita.png obj_height: 64 obj_width: 64 scale_x: 2 scale_y: 2 repeated: false animated: false fps: 1 properties_set: plita_properties type: dynamic
 
 lay
-name: player X: 0 Y: 0  url: resources/GameAssets/animations/player/playerFrontWalk.png obj_height: 64 obj_width: 64 scale_x: 2 scale_y: 2 repeated: false animated: true fps: 24 properties_set: move_properties type: dynamic
+name: player X: 0 Y: 0  url: resources/GameAssets/animations/player/playerFrontWalk.png obj_height: 64 obj_width: 64 scale_x: 2 scale_y: 2 repeated: false animated: true fps: 7 properties_set: move_properties type: dynamic
 

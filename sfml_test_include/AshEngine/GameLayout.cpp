@@ -34,13 +34,13 @@ void ash::GameLayout::sceneAnimationsUpdate(sf::Time deltaTime)
 	for (auto obj = staticObjects.begin(); obj < staticObjects.end(); ++obj)
 	{
 		if (!obj->isVisible()) { continue; }
-		if (obj->isAnimated()) { obj->updateAnimation(deltaTime); }
+		if (obj->isAnimated()) { obj->playAnimation(deltaTime); }
 	}
 	for (auto& element : dynamicObjects)
 	{
 		GameObject& obj = element.second;
 		if (!obj.isVisible()) { continue; }
-		if (obj.isAnimated()) { obj.updateAnimation(deltaTime); }
+		if (obj.isAnimated()) { obj.playAnimation(deltaTime); }
 	}
 }
 

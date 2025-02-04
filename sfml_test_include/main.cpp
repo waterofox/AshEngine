@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#define playerSpeed 150
+#define playerSpeed 100
 
 enum textures
 {
@@ -41,61 +41,77 @@ void playerCustomInput(GameEngine* Game, sf::Keyboard::Key key, bool isPressed)
 
 enum CustomeEvents
 {
-	plita_pressed = 1
+	plita_pressed = 1,
 };
 
 void plita_pressed_instruction(GameEngine* Game, ash::GameObject* sender)
 {
-	if (sender->getName() == "plita")
+	std::string color;
+	for (int i = 0; i < sender->getName().length(); ++i)
 	{
-		ash::GameObject* OBJ = nullptr;
-		if (Game->getObject("test", OBJ))
+		if (sender->getName()[i] == '_')
 		{
-			std::cout << "object is already exists";
-			return;
+			for (int j = i + 1; j < sender->getName().length(); ++j)
+			{
+				color += sender->getName()[j];
+			}
+			break;
 		}
-		else
-		{
-			OBJ = new ash::GameObject();
-			OBJ->setName("test");
-			OBJ->setPosition(sf::Vector2f(200, 0));
-			OBJ->updateTexture("resources/GameAssets/animations/scene/fire.png");
-			OBJ->setFramePerSeconds(48);
-			OBJ->setScale(sf::Vector2f(2, 2));
-			OBJ->getSFMlobj().setTextureRect(sf::IntRect(0, 0, 64, 64));
-			OBJ->enableAnimation();
-			OBJ->setVisible(true);
-			Game->addObjectonScene(*OBJ, ash::objectType::dynamicType, 0);
-			delete OBJ;
-		}
-		OBJ = nullptr;
+	}
+	ash::GameObject* light = nullptr;
+	if (Game->getObject("light_" + color, light))
+	{
+		(*light)["timer_sec"] = '0';
+		light->setCurrentFrame(1);
 	}
 }
 
 void controlScript(GameEngine* Game,ash::GameObject* player)
 {
 	bool moveFlag = false;
+	int frame;
 	if (bool(std::stoi((*player)["moveUp"])))
 	{
-		player->moveY(-playerSpeed*DELTA_TIME.asSeconds());
+		player->moveY(-playerSpeed*DELTA_TIME);
 		if (player->getTexturePath() != texture[textures::PLAYER_UP_WALK])
 		{
+			frame = player->getCurrentFrame();
+			player->loadTexture(texture[textures::PLAYER_UP_WALK]);
+			player->setCurrentFrame(frame);
 		}
 		moveFlag = true;
 	}
 	if (bool(std::stoi((*player)["moveDown"])))
 	{
-		player->moveY(playerSpeed * DELTA_TIME.asSeconds());
+		player->moveY(playerSpeed * DELTA_TIME);
+		if (player->getTexturePath() != texture[textures::PLAYER_DOWN_WALK])
+		{
+			frame = player->getCurrentFrame();
+			player->loadTexture(texture[textures::PLAYER_DOWN_WALK]);
+			player->setCurrentFrame(frame);
+		}
 		moveFlag = true;
 	}
 	if (bool(std::stoi((*player)["moveRight"])))
 	{
-		player->moveX(playerSpeed * DELTA_TIME.asSeconds());
+		player->moveX(playerSpeed * DELTA_TIME);
+		if (player->getTexturePath() != texture[textures::PLAYER_RIGHT_WALK])
+		{
+			frame = player->getCurrentFrame();
+			player->loadTexture(texture[textures::PLAYER_RIGHT_WALK]);
+			player->setCurrentFrame(frame);
+		}
 		moveFlag = true;
 	}
 	if (bool(std::stoi((*player)["moveLeft"])))
 	{
-		player->moveX(-playerSpeed * DELTA_TIME.asSeconds());
+		player->moveX(-playerSpeed * DELTA_TIME);
+		if (player->getTexturePath() != texture[textures::PLAYER_LEFT_WALK])
+		{
+			frame = player->getCurrentFrame();
+			player->loadTexture(texture[textures::PLAYER_LEFT_WALK]);
+			player->setCurrentFrame(frame);
+		}
 		moveFlag = true;
 	}
 	if (!moveFlag)
@@ -131,6 +147,15 @@ void plitaScript(GameEngine* Game, ash::GameObject* plita)
 			{
 				(*plita)["is_active"] = "true";
 				Game->emitGameEvent(plita_pressed, plita);
+				plita->loadTexture(texture[textures::PLITA_PRESSED]);
+			}
+		}
+		else
+		{
+			if ((*plita)["is_active"] == "true")
+			{
+				(*plita)["is_active"] = "false";
+				plita->loadTexture(texture[textures::PLITA_UNPRESSED]);
 			}
 		}
 		
@@ -138,21 +163,46 @@ void plitaScript(GameEngine* Game, ash::GameObject* plita)
 	}
 	
 }
+void lightScript(GameEngine* Game, ash::GameObject* light)
+{
+	if (light->getCurrentFrame() != 0)
+	{
+		float time = std::stof((*light)["timer_sec"]);
+		time += DELTA_TIME;
+		if (time >= 2)
+		{
+			light->setCurrentFrame(0);
+		}
+		else
+		{
+			(*light)["timer_sec"] = std::to_string(time);
+		}
+	}
+}
 
 int main()
 {
 
-	GameEngine game(640, 480, 60);
+	GameEngine game(640, 480, 120);
 
 	game.setPlayerInput(playerCustomInput);
 
-	game.addScript("preview", "player", controlScript); 
-	game.addScript("preview", "plita", plitaScript);
+	game.addScript("lights", "player", controlScript); 
+
+	game.addScript("lights", "plita_green", plitaScript);
+	game.addScript("lights", "plita_red", plitaScript);
+	game.addScript("lights", "plita_blue", plitaScript);
+	game.addScript("lights", "plita_yellow", plitaScript);
+
+	game.addScript("lights", "light_green", lightScript);
+	game.addScript("lights", "light_red", lightScript);
+	game.addScript("lights", "light_blue", lightScript);
+	game.addScript("lights", "light_yellow", lightScript);
 
 	game.addInstruction(plita_pressed, plita_pressed_instruction);
 
 	game.addPropertiesSetsConfig("resources/properties.txt");
 
-	game.loadScene("resources/scenes/previewScene.txt");
-	game.run();
+	game.loadScene("resources/scenes/lightsScene.txt");
+	game.startGame();
 }

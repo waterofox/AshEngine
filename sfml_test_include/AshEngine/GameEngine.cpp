@@ -1,29 +1,34 @@
 #include "GameEngine.h"
 using namespace ash;
+GameEngine::GameEngine(unsigned int width, unsigned int height, unsigned int fps)
+{
+	this->width = width;
+	this->height = height;
+	this->framePerSeconds = fps;
+}
+GameEngine::~GameEngine()
+{
+	delete scene;
+	buferObject = nullptr;
+}
+
 void GameEngine::run()
 {
 	//это только проверка на то, чтоб при запуске окна загружалось хоть что-то;
 	if (!isSceneReady) { std::cout << "ENGINE_ERROR: no loaded scene" << '\n'; return; }
-	window.create(sf::VideoMode(width, height), "GameEngineWindow");
+	window.create(sf::VideoMode(width, height), "AshEngineWindow");
 	window.setFramerateLimit(framePerSeconds);
-
-	window.setVerticalSyncEnabled(true);
 	window.setKeyRepeatEnabled(false);
 
 	//main game loop
-
+	sf::Clock clock;
 	while (window.isOpen())
 	{
 		if (isSceneReady)
 		{
+			deltaTime = clock.restart();
 			eventHandling();
-			timeSinceLastUodate += clock.restart();
-			while (timeSinceLastUodate > fixedDeltaTime)
-			{
-				timeSinceLastUodate -= fixedDeltaTime;
-				eventHandling(); //keyboard/mouse event catch
-				update(); // update gamelogic and prerender
-			}
+			update(); 
 			render(); //render
 		}
 	}
@@ -33,7 +38,6 @@ void GameEngine::eventHandling()
 {
 	if (window.pollEvent(actualEvent))
 	{
-
 		switch (actualEvent.type)
 		{
 		case sf::Event::Closed: {window.close(); } break;
@@ -68,7 +72,7 @@ void GameEngine::eventHandling()
 void GameEngine::update()
 {
 	//update camera position (target of player)
-	if (dynamicCamera) // only if dynamicCamera is true;
+	if (dynamicCamera) // only if dynamic Camera is true;
 	{
 		ash::GameObject* player = nullptr;
 		if (this->getObject("player", player))
@@ -82,7 +86,7 @@ void GameEngine::update()
 	//update animations on scene
 	for (auto lay = scene->begin(); lay < scene->end(); ++lay) 
 	{
-		lay->sceneAnimationsUpdate(fixedDeltaTime);
+		lay->sceneAnimationsUpdate(deltaTime);
 	}
 
 	//events
@@ -213,7 +217,7 @@ bool GameEngine::loadScene(std::string path)
 		else if (key == "url:")
 		{
 			sceneFile >> value;
-			newObj.updateTexture(value);
+			newObj.loadTexture(value);
 			newObj.setTexturePath(value);
 		}
 		else if (key == "obj_height:")
@@ -329,7 +333,7 @@ void GameEngine::addSceneLay()
 	scene->push_back(newLay);
 }
 
-void GameEngine::addObjectonScene(ash::GameObject object, int objectType, int lay)
+void GameEngine::addObjectOnScene(ash::GameObject object, int objectType, int lay)
 {
 	ash::GameLayout& actualLay = (*scene)[lay];
 	actualLay.addObject(object.getName(),object,objectType);
@@ -426,9 +430,9 @@ sf::Vector2u GameEngine::getWindowSize()
 	return sf::Vector2u(width,height);
 }
 
-sf::Time GameEngine::getDeltaTime()
+float GameEngine::getDeltaTime()
 {
-	return this->fixedDeltaTime;
+	return this->deltaTime.asSeconds();
 }
 
 sf::View& GameEngine::getCamera()

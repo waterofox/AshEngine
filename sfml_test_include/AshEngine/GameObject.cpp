@@ -110,7 +110,7 @@ void GameObject::setTextureRepeat(bool arg)
 	textureRepeated = arg;
 	objSprite.setTexture(objTexture);
 }
-void GameObject::updateTexture(std::string path)
+void GameObject::loadTexture(std::string path)
 {
 	objTexture.loadFromFile(path);
 	objTexturePath = path;
@@ -150,12 +150,15 @@ void GameObject::setCurrentFrame(int newCurrentFrame)
 	currentFrame = newCurrentFrame;
 	objSprite.setTextureRect(sf::IntRect(int(currentFrame) * (objTexture.getSize().x / frameCount), 0, objTexture.getSize().y, objTexture.getSize().y));
 }
-void GameObject::updateAnimation(sf::Time deltaTime)
+void GameObject::playAnimation(sf::Time deltaTime)
 {
-	if (!isAnima) { return; }
-	currentFrame += (int(framePerSeconds/frameCount) + 1)*deltaTime.asSeconds();
-	if (currentFrame >= frameCount) { currentFrame -= frameCount; }
-	objSprite.setTextureRect(sf::IntRect(int(currentFrame)*(objTexture.getSize().x/frameCount), 0, objTexture.getSize().y, objTexture.getSize().y));
+	playTimer += deltaTime;
+	if (playTimer.asSeconds() >= 1.0 / framePerSeconds)
+	{
+		playTimer = sf::Time::Zero;
+		currentFrame = (currentFrame + 1) % frameCount;
+	}
+	objSprite.setTextureRect(sf::IntRect(int(currentFrame) * (objTexture.getSize().x / frameCount), 0, objTexture.getSize().y, objTexture.getSize().x / frameCount));
 }
 
 //process methods

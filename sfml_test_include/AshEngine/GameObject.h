@@ -40,11 +40,12 @@ namespace ash
 		std::map<std::string, std::string>* customProperties = nullptr;
 		sf::Vector2f objMovement; 
 		
-		//animation
+		//animation //todo по хорошему нужно вырезать это и создать отдельный класс.
 		bool isAnima = false;
 		int frameCount = 1;
-		float currentFrame = 0.f;
+		int currentFrame = 0;
 		int framePerSeconds = 24;
+		sf::Time playTimer = sf::Time::Zero;
 
 		//process methods
 		void setTexture();
@@ -102,7 +103,7 @@ namespace ash
 		//getters <animation>
 		bool isAnimated() { return isAnima; }
 		int getFrameCount() { return this->frameCount; }
-		float getCurrentFrame() { return this->currentFrame; }
+		int getCurrentFrame() { return this->currentFrame; }
 		int getFramePresSeconds() { return this->framePerSeconds; }
 
 		//setters <the core>
@@ -112,7 +113,7 @@ namespace ash
 		void setTexturePath(std::string path) { this->objTexturePath = path; }
 		void setVisible(bool arg) { this->visible = arg; }
 		void setTextureRepeat(bool arg);
-		void updateTexture(std::string); //todo rename to "loadTexture"
+		void loadTexture(std::string); 
 
 		//setters <properties>
 		void setPropertiesSet(std::map<std::string, std::string>);
@@ -130,7 +131,7 @@ namespace ash
 		void setFramePerSeconds(int newFramePerSeconds) { framePerSeconds = newFramePerSeconds; }
 		void disableAnimation() { isAnima = false; }
 		void enableAnimation() { isAnima = true; }
-		void updateAnimation(sf::Time deltaTime); //todo rename to "playAnimation"
+		void playAnimation(sf::Time deltaTime); 
 
 	};
 }

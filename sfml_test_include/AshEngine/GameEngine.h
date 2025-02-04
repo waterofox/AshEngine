@@ -14,8 +14,8 @@
 
 namespace ash
 {
-	//define for lazy person:
 	#define DELTA_TIME Game->getDeltaTime()
+	//some types
 	class GameEngine
 	{
 		//type for game's scripts:
@@ -27,33 +27,36 @@ namespace ash
 		//type for player input method:
 		using inputMethod = void(*)(GameEngine*, sf::Keyboard::Key, bool);
 	private:
-		//game tic fields:
-		sf::Clock clock;
-		sf::Time timeSinceLastUodate = sf::Time::Zero;
-		sf::Time fixedDeltaTime = sf::Time::Zero;
-		int framePerSeconds = 60;
 
-		//system evets fields:
+		//time
+		sf::Time deltaTime = sf::Time::Zero;
+
+		//frames
+		sf::RenderWindow window; //main window
+		unsigned int width;
+		unsigned int height;
+
+		//system evets 
 		sf::Event actualEvent;
 		sf::Keyboard::Key key;
 		std::pair<int, inputMethod> input; //for custom player input (this is a ********, i should fix that in 2025)
 		bool isCustomInputLoaded = false;
 
-		//game events instructions
+		//game events 
 		std::map<int, instruction> instructions;
 		std::queue<std::pair<int, ash::GameObject*>> gameEventQueue;		//todo think about this staff before write "setScene" method
 
-		sf::RenderWindow window; //main window
-		unsigned int width;
-		unsigned int height;
+		//game
+		int framePerSeconds = 60;
+		std::string propertiesSetsConfigPath;
 
 		//game scene
 		std::vector<ash::GameLayout>* scene = nullptr;
 		std::string sceneName = "";
 		bool isSceneReady = false;
-		std::string propertiesSetsConfigPath;
 
-		sf::View camera; //camera
+		//camera
+		sf::View camera;
 		bool dynamicCamera = false;
 		bool fullscreen = false;
 
@@ -62,55 +65,46 @@ namespace ash
 		//game scripts
 		std::map<std::string, std::vector<std::pair<std::string, script>>> scripts;
 
-	public:
-		//sfml classic methods
+		//process methods
 		void run();
 		void eventHandling();
 		void update();
 		void render();
-
 		void playerInputStandart(sf::Keyboard::Key, bool isPressed); //standart input (it is an empty)
-
-
-		bool loadScene(std::string path);
-		void addSceneLay();
-		void addObjectonScene(ash::GameObject object, int objectType, int lay);
-		std::vector<ash::GameLayout>*& getActualScene();
-
-		void addPropertiesSetsConfig(const std::string& path);
 		std::map<std::string, std::string> getFinishedProperties(const std::string& name);
 
-		bool getObject(std::string name, ash::GameObject*& buffer);
+	public:
 
+		//constructors
+		GameEngine(unsigned int width, unsigned int height, unsigned int fps);
+		~GameEngine();
+
+		//setting up the game
+		void startGame() { run(); }
+		void addPropertiesSetsConfig(const std::string& path);
 		void addScript(std::string sceneName, std::string objectName, script scriptPtr);
-
 		void setPlayerInput(inputMethod method);
-
 		void addInstruction(int id, instruction instructionPtr);
 		void emitGameEvent(int eventId, ash::GameObject* sender);
 
-		sf::Vector2u getWindowSize();
 
-		sf::Time getDeltaTime();
+		//manipulating the scene
+		bool loadScene(std::string path);
+		void addSceneLay();
+		void addObjectOnScene(ash::GameObject object, int objectType, int lay);
+		std::vector<ash::GameLayout>*& getActualScene();
+		bool getObject(std::string name, ash::GameObject*& buffer);
 
+		//getters <time>
+		float getDeltaTime();
+		sf::Time getElapsedTime() { return deltaTime; }
+
+		//getters <camera>
 		sf::View& getCamera();
 
+		//getters <window>
+		sf::Vector2u getWindowSize();
 
-		//important staff
-			//constructors
-		GameEngine(unsigned int width, unsigned int height, unsigned int fps)
-		{
-			this->width = width;
-			this->height = height;
-			this->framePerSeconds = fps;
-			this->fixedDeltaTime = sf::seconds(1.6 / fps);
-		}
-		//destructors
-		~GameEngine()
-		{
-			delete scene;
-			buferObject = nullptr;
-		}
 	};
 };
 
