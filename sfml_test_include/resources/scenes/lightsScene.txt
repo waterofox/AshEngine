@@ -16,4 +16,5 @@ name: plita_yellow X: 266 Y: 100 url: resources/GameAssets/statickAssets/buildin
 
 
 lay
-name: player X: 0 Y: 0  url: resources/GameAssets/animations/player/playerFrontWalk.png obj_height: 64 obj_width: 64 scale_x: 2 scale_y: 2 repeated: false animated: true fps: 7 properties_set: move_properties type: dynamic
+name: player X: -100 Y: 0  url: resources/GameAssets/animations/player/playerFrontWalk.png obj_height: 64 obj_width: 64 scale_x: 1.5 scale_y: 1.5 repeated: true animated: true fps: 7 collision: true collision_height: 128 collision_width: 128 collision_x: 0 collision_y: 0 type: dynamic
+name: col X: 100 Y: 88 url: resources/GameAssets/statickAssets/terrain/void.png obj_height: 16 obj_width: 256 scale_x: 1 scale_y: 1 repeated: true collision: true collision_height: 64 collision_width: 256 type: dynamic

@@ -1,3 +1,2 @@
 plita_properties: 1 is_active: false
 light_properties: 1 timer_sec: 0
-move_properties: 4 moveUp: 0 moveRight: 0 moveDown: 0 moveLeft: 0

@@ -71,6 +71,9 @@ void GameEngine::eventHandling()
 
 void GameEngine::update()
 {
+
+	targetCollions();
+
 	//update camera position (target of player)
 	if (dynamicCamera) // only if dynamic Camera is true;
 	{
@@ -104,6 +107,7 @@ void GameEngine::update()
 	{
 		if (this->getObject(script.first, buferObject))
 		{
+			savePreviousPosition(buferObject);
 			script.second(this, buferObject);
 			buferObject = nullptr;
 		}
@@ -143,6 +147,7 @@ bool GameEngine::loadScene(std::string path)
 
 	while (!sceneFile.eof())
 	{
+
 		sceneFile >> key;
 		if (key == "camera:")
 		{
@@ -213,6 +218,7 @@ bool GameEngine::loadScene(std::string path)
 		{
 			sceneFile >> value;
 			newObj.setY(std::stof(value));
+			newObj.setPreviosPosition(newObj.getPosition());
 		}
 		else if (key == "url:")
 		{
@@ -294,6 +300,43 @@ bool GameEngine::loadScene(std::string path)
 				newObj.setPropertiesSet(propertiesBuffer);
 			}
 		}
+		else if (key == "collision:")
+		{
+			sceneFile >> value;
+			if (value == "true")
+			{
+				newObj.enableCollision();
+			}
+			else if (value == "false")
+			{
+				newObj.disableCollision();
+			}
+			else
+			{
+				std::cout << "SCENE_ERROR: incorrect value of key <<  " << key << '\n';
+				return false;
+			}
+		}
+		else if (key == "collision_height:")
+		{
+			sceneFile >> value;
+			newObj.setCollisionSize(0, std::stof(value));
+		}
+		else if (key == "collision_width:")
+		{
+			sceneFile >> value;
+			newObj.setCollisionSize(std::stof(value), newObj.getCollisionSize().height);
+		}
+		else if (key == "collision_x:")
+		{
+			sceneFile >> value;
+			newObj.setCollisionCenter(std::stof(value),0);
+		}
+		else if (key == "collision_y:")
+		{
+			sceneFile >> value;
+			newObj.setCollisionCenter(newObj.getCollisionCenter().x, std::stof(value));
+		}
 		else if (key == "type:")
 		{
 			sceneFile >> value;
@@ -301,11 +344,13 @@ bool GameEngine::loadScene(std::string path)
 			{
 				newObj.setVisible(true);
 				(*scene)[layIndex].addObject(newObj.getName(), newObj, ash::objectType::dynamicType);
+				newObj.clean();
 			}
 			else if(value == "static")
 			{
 				newObj.setVisible(true);
 				(*scene)[layIndex].addObject(newObj.getName(), newObj, ash::objectType::staticType);
+				newObj.clean();
 			}
 			else
 			{
@@ -388,6 +433,51 @@ std::map<std::string, std::string> GameEngine::getFinishedProperties(const std::
 		std::cout << "PROPERTY ERROR<" << name << ">: incorrect name of set" << std::endl;
 	}
 	return ans;
+}
+
+void ash::GameEngine::targetCollions()
+{
+	sf::FloatRect objBounds;
+	sf::Vector2f posBuffer;
+	
+	for (int i = 0; i < scene->size(); ++i)
+	{
+		GameLayout& actualLay = (*scene)[i];
+		std::map<std::string, GameObject>& objects = actualLay.getDynamicObjects();
+		if (objects.size() == 0) { continue; }
+		for (auto& elemet : objects)
+		{
+			GameObject& obj = elemet.second;
+			if (!obj.isCollision()) { continue; }
+			objBounds = obj.getSFMlobj().getGlobalBounds();; 
+			for (auto& elemetB : objects)
+			{
+				if (&elemetB == &elemet) { continue; }
+				if (!elemetB.second.isCollision()) { continue; }
+
+				GameObject& objB = elemetB.second;
+				
+				if (objBounds.intersects(objB.getSFMlobj().getGlobalBounds()))
+				{
+					posBuffer = obj.getPreviosPosition();
+					obj.setPosition(posBuffer);
+					obj.setPreviosPosition(posBuffer);
+					
+					posBuffer = objB.getPreviosPosition();
+					objB.setPosition(posBuffer);
+					objB.setPreviosPosition(posBuffer);
+				}
+			}
+		}
+	}
+}
+
+void ash::GameEngine::savePreviousPosition(GameObject*& obj)
+{
+	if (obj->isMoving())
+	{
+		obj->setPreviosPosition(obj->getPosition());
+	}
 }
 
 bool GameEngine::getObject(std::string name, ash::GameObject*& buffer)

@@ -15,9 +15,11 @@
 namespace ash
 {
 	#define DELTA_TIME Game->getDeltaTime()
-	//some types
+
 	class GameEngine
 	{
+		//some types
+
 		//type for game's scripts:
 		using script = void(*)(GameEngine*, ash::GameObject*);
 
@@ -72,6 +74,8 @@ namespace ash
 		void render();
 		void playerInputStandart(sf::Keyboard::Key, bool isPressed); //standart input (it is an empty)
 		std::map<std::string, std::string> getFinishedProperties(const std::string& name);
+		void targetCollions();
+		void savePreviousPosition(GameObject*& obj);
 
 	public:
 

@@ -21,6 +21,9 @@ namespace ash
 		void sceneAnimationsUpdate(sf::Time deltaTime);
 		void renderScene(sf::RenderWindow& window);
 
+		std::map<std::string, GameObject>& getDynamicObjects() { return dynamicObjects; }
+		std::vector<GameObject>& getStaticObjects() { return staticObjects; }
+
 		GameLayout() {}
 		GameLayout(const GameLayout& SceneB)
 		{

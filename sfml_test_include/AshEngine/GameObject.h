@@ -10,12 +10,20 @@ namespace ash
 	enum objectType
 	{
 		staticType = 0,
-		dynamicType = 1
+		dynamicType = 1,
+		collisionType = 2
 	};
 	struct Sizef
 	{
 		float width = 0;
 		float height = 0;
+
+		Sizef(){}
+		Sizef(float width, float height)
+		{
+			this->width = width;
+			this->height = height;
+		}
 	};
 	struct cords
 	{
@@ -38,7 +46,14 @@ namespace ash
 
 		//properties
 		std::map<std::string, std::string>* customProperties = nullptr;
+		sf::Vector2f objPreviosPosition;
 		sf::Vector2f objMovement; 
+
+		//collision
+		bool collision = false;
+		Sizef collisionSize;
+		sf::Vector2f collisionCenter = sf::Vector2f(0,0);
+
 		
 		//animation //todo по хорошему нужно вырезать это и создать отдельный класс.
 		bool isAnima = false;
@@ -51,6 +66,16 @@ namespace ash
 		void setTexture();
 
 	public:
+		//move 
+		bool moveUp = false;
+		bool moveRight = false;
+		bool moveDown = false;
+		bool moveLeft = false;
+
+		//total set
+		void clean();
+
+
 		//constructors
 		GameObject();
 		GameObject( const GameObject& objB);
@@ -77,6 +102,10 @@ namespace ash
 			{
 				this->customProperties = new std::map<std::string, std::string>(*objB.customProperties);
 			}
+			this->objPreviosPosition = objB.objPreviosPosition;
+			this->collision = objB.collision;
+			this->collisionSize = objB.collisionSize;
+			this->collisionCenter = objB.collisionCenter;
 
 			return *this;
 		}
@@ -98,7 +127,14 @@ namespace ash
 		std::string& operator[](const char* key);
 		std::string  operator[](const char* key)  const;
 		sf::Vector2f getPosition(); 
+		sf::Vector2f getPreviosPosition() { return objPreviosPosition; }
+		bool isMoving();
 		Sizef getSize(); 
+		
+		//getters <collision>
+		bool isCollision() { return collision; }
+		Sizef getCollisionSize() { return collisionSize; }
+		sf::Vector2f getCollisionCenter() { return collisionCenter; }
 
 		//getters <animation>
 		bool isAnimated() { return isAnima; }
@@ -119,11 +155,21 @@ namespace ash
 		void setPropertiesSet(std::map<std::string, std::string>);
 		void setScale(sf::Vector2f newScale) { objSprite.setScale(newScale); }
 		void setPosition(sf::Vector2f); //set object position
+		void setPreviosPosition(sf::Vector2f pos) { objPreviosPosition = pos; }
 		void setX(float newX);
 		void setY(float newY);
 		void moveX(float plusX); //Ox move
 		void moveY(float plusY); //Oy move
 		void move(float plusX, float plusY);
+
+		//setters <collision>
+		void enableCollision() { collision = true; }
+		void disableCollision() { collision = false; }
+		void setCollisionSize(ash::Sizef size) { collisionSize = size; }
+		void setCollisionSize(float width, float height) { collisionSize.width = width; collisionSize.height = height; }
+		void setCollisionSize(sf::Vector2f size) { collisionSize.width = size.x; collisionSize.height = size.y; }
+		void setCollisionCenter(sf::Vector2f center) { collisionCenter = center; }
+		void setCollisionCenter(float x, float y) { collisionCenter.x = x; collisionCenter.y = y; }
 
 		//settres <animation>
 		void setCurrentFrame(int);

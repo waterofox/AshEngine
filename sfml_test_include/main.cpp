@@ -12,7 +12,8 @@ enum textures
 	PLAYER_UP_WALK = 2,
 	PLAYER_DOWN_WALK = 3,
 	PLITA_UNPRESSED = 4,
-	PLITA_PRESSED = 5
+	PLITA_PRESSED = 5,
+	SC = 6
 
 };
 
@@ -21,7 +22,8 @@ std::vector<std::string> texture{ "resources/GameAssets/animations/player/player
 									"resources/GameAssets/animations/player/playerBackWalk.png",
 									"resources/GameAssets/animations/player/playerFrontWalk.png",
 									"resources/GameAssets/statickAssets/buildings/disPlita.png",
-									"resources/GameAssets/statickAssets/buildings/enaPlita.png" };
+									"resources/GameAssets/statickAssets/buildings/enaPlita.png" ,
+									"resources/GameAssets/statickAssets/terrain/sq.png"};
 using namespace ash;
 
 void playerCustomInput(GameEngine* Game, sf::Keyboard::Key key, bool isPressed)
@@ -30,10 +32,10 @@ void playerCustomInput(GameEngine* Game, sf::Keyboard::Key key, bool isPressed)
 	if (!Game->getObject("player", player)) { return; };
 	switch (key)
 	{
-	case sf::Keyboard::D: {(*player)["moveRight"] = std::to_string(int(isPressed)); }break;
-	case sf::Keyboard::S: {(*player)["moveDown"] = std::to_string(int(isPressed)); }break;
-	case sf::Keyboard::A: {(*player)["moveLeft"] = std::to_string(int(isPressed)); }break;
-	case sf::Keyboard::W: {(*player)["moveUp"] = std::to_string(int(isPressed)); }break;
+	case sf::Keyboard::D: {player->moveRight = isPressed; }break;
+	case sf::Keyboard::S: {player->moveDown = isPressed; }break;
+	case sf::Keyboard::A: {player->moveLeft = isPressed; }break;
+	case sf::Keyboard::W: {player->moveUp = isPressed; }break;
 	default:
 		break;
 	}
@@ -70,9 +72,9 @@ void controlScript(GameEngine* Game,ash::GameObject* player)
 {
 	bool moveFlag = false;
 	int frame;
-	if (bool(std::stoi((*player)["moveUp"])))
+	if (player->moveUp)
 	{
-		player->moveY(-playerSpeed*DELTA_TIME);
+		player->move(0,-playerSpeed*DELTA_TIME);
 		if (player->getTexturePath() != texture[textures::PLAYER_UP_WALK])
 		{
 			frame = player->getCurrentFrame();
@@ -81,9 +83,9 @@ void controlScript(GameEngine* Game,ash::GameObject* player)
 		}
 		moveFlag = true;
 	}
-	if (bool(std::stoi((*player)["moveDown"])))
+	if (player->moveDown)
 	{
-		player->moveY(playerSpeed * DELTA_TIME);
+		player->move(0,playerSpeed * DELTA_TIME);
 		if (player->getTexturePath() != texture[textures::PLAYER_DOWN_WALK])
 		{
 			frame = player->getCurrentFrame();
@@ -92,9 +94,9 @@ void controlScript(GameEngine* Game,ash::GameObject* player)
 		}
 		moveFlag = true;
 	}
-	if (bool(std::stoi((*player)["moveRight"])))
+	if (player->moveRight)
 	{
-		player->moveX(playerSpeed * DELTA_TIME);
+		player->move(playerSpeed * DELTA_TIME,0);
 		if (player->getTexturePath() != texture[textures::PLAYER_RIGHT_WALK])
 		{
 			frame = player->getCurrentFrame();
@@ -103,9 +105,9 @@ void controlScript(GameEngine* Game,ash::GameObject* player)
 		}
 		moveFlag = true;
 	}
-	if (bool(std::stoi((*player)["moveLeft"])))
+	if (player->moveLeft)
 	{
-		player->moveX(-playerSpeed * DELTA_TIME);
+		player->move(-playerSpeed * DELTA_TIME,0);
 		if (player->getTexturePath() != texture[textures::PLAYER_LEFT_WALK])
 		{
 			frame = player->getCurrentFrame();
@@ -123,7 +125,6 @@ void controlScript(GameEngine* Game,ash::GameObject* player)
 	{
 		player->enableAnimation();
 	}
-
 }
 
 void plitaScript(GameEngine* Game, ash::GameObject* plita)

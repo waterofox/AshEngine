@@ -1,6 +1,38 @@
 #include "GameObject.h"
 using namespace ash;
 
+void ash::GameObject::clean()
+{
+	objSprite.setTexture(sf::Texture());
+	name = "none";
+
+	objTexture = sf::Texture();
+
+	objTexturePath = "";
+	textureRepeated = false;
+	visible = true;
+
+	objSprite.setScale(sf::Vector2f(1, 1));
+
+	if (customProperties != nullptr)
+	{
+		delete customProperties;
+		customProperties = nullptr;
+	}
+	objMovement = sf::Vector2f(0, 0);
+
+
+	collision = false;
+	collisionSize = Sizef(0, 0);
+
+	isAnima = false;
+	frameCount = 1;
+	currentFrame = 0;
+	framePerSeconds = 24;
+	playTimer = sf::Time::Zero;
+
+}
+
 //constructors & operators
 GameObject::GameObject() {}
 GameObject::GameObject(const GameObject& objB)
@@ -26,6 +58,11 @@ GameObject::GameObject(const GameObject& objB)
 	{
 		this->customProperties = new std::map<std::string, std::string>(*objB.customProperties);
 	}
+
+	this->objPreviosPosition = objB.objPreviosPosition;
+	this->collision = objB.collision;
+	this->collisionSize = objB.collisionSize;
+	this->collisionCenter = objB.collisionCenter;
 }
 GameObject::~GameObject() {}
 
@@ -95,6 +132,14 @@ std::string  GameObject::operator[](const char* key) const
 	return stats[key];
 }
 sf::Vector2f GameObject::getPosition() { return objSprite.getGlobalBounds().getPosition(); }
+bool ash::GameObject::isMoving()
+{
+	if (moveUp or moveDown or moveLeft or moveRight)
+	{
+		return true;
+	}
+	return false;
+}
 Sizef GameObject::getSize()
 {
 	Sizef objectSizef;
@@ -140,9 +185,18 @@ void GameObject::setY(float newY)
 	newPos.y = newY;
 	this->setPosition(newPos);
 }
-void GameObject::moveX(float plusX) { objMovement.x += plusX; objSprite.setPosition(objMovement); }
-void GameObject::moveY(float plusY) { objMovement.y += plusY; objSprite.setPosition(objMovement); }
-void GameObject::move(float plusX, float plusY) { objMovement.x += plusX; objMovement.y += plusY; objSprite.setPosition(objMovement); }
+void GameObject::moveX(float plusX) 
+{ 
+	objMovement.x += plusX; objSprite.setPosition(objMovement); 
+}
+void GameObject::moveY(float plusY) 
+{
+	objMovement.y += plusY; objSprite.setPosition(objMovement); 
+}
+void GameObject::move(float plusX, float plusY) 
+{
+	objMovement.x += plusX; objMovement.y += plusY; objSprite.setPosition(objMovement); 
+}
 
 //settres <animation>
 void GameObject::setCurrentFrame(int newCurrentFrame) 
