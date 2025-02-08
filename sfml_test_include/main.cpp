@@ -44,6 +44,7 @@ void playerCustomInput(GameEngine* Game, sf::Keyboard::Key key, bool isPressed)
 enum CustomeEvents
 {
 	plita_pressed = 1,
+	key_pressed = 2,
 };
 
 void plita_pressed_instruction(GameEngine* Game, ash::GameObject* sender)
@@ -67,7 +68,92 @@ void plita_pressed_instruction(GameEngine* Game, ash::GameObject* sender)
 		light->setCurrentFrame(1);
 	}
 }
+void key_pressed_instruction(GameEngine* GAme, ash::GameObject* sender)
+{
+	GameObject* key = nullptr;
+	if (sender->moveUp)
+	{
+		if (GAme->getObject("Wkey", key))
+		{
+			(*key)["is_active"] = "true";
+		}
+	}
+	else
+	{
+		if (GAme->getObject("Wkey", key))
+		{
+			(*key)["is_active"] = "false";
+		}
+	}
+	if (key != nullptr) { key = nullptr; }
+	if (sender->moveLeft)
+	{
+		if (GAme->getObject("Akey", key))
+		{
+			(*key)["is_active"] = "true";
+		}
+	}
+	else
+	{
+		if (GAme->getObject("Akey", key))
+		{
+			(*key)["is_active"] = "false";
+		}
+	}
+	if (key != nullptr) { key = nullptr; }
+	if (sender->moveDown)
+	{
+		if (GAme->getObject("Skey", key))
+		{
+			(*key)["is_active"] = "true";
+		}
+	}
+	else
+	{
+		if (GAme->getObject("Skey", key))
+		{
+			(*key)["is_active"] = "false";
+		}
+	}
+	if (key != nullptr) { key = nullptr; }
+	if (sender->moveRight)
+	{
+		if (GAme->getObject("Dkey", key))
+		{
+			(*key)["is_active"] = "true";
+		}
+	}
+	else
+	{
+		if (GAme->getObject("Dkey", key))
+		{
+			(*key)["is_active"] = "false";
+		}
+	}
+	if (key != nullptr) { key = nullptr; }
+}
 
+void colScript(GameEngine* Game, ash::GameObject* col)
+{
+	GameObject* player = nullptr;
+	if (Game->getObject("player", player))
+	{
+		col->getSFMlobj().setTextureRect(sf::IntRect(0,0, player->getCollisionSize().width, player->getCollisionSize().height));
+		col->setPosition(sf::Vector2f(player->getPosition().x + player->getCollisionCenter().x, player->getPosition().y + player->getCollisionCenter().y));
+		player = nullptr;
+	}
+}
+void keyScript(GameEngine* Game, ash::GameObject* key)
+{
+	if ((*key)["is_active"] == "true")
+	{
+		key->setCurrentFrame(1);
+	}
+	else
+	{
+		key->setCurrentFrame(0);
+	}
+}
 void controlScript(GameEngine* Game,ash::GameObject* player)
 {
 	bool moveFlag = false;
@@ -125,6 +211,7 @@ void controlScript(GameEngine* Game,ash::GameObject* player)
 	{
 		player->enableAnimation();
 	}
+	Game->emitGameEvent(key_pressed,player);
 }
 
 void plitaScript(GameEngine* Game, ash::GameObject* plita)
@@ -200,7 +287,15 @@ int main()
 	game.addScript("lights", "light_blue", lightScript);
 	game.addScript("lights", "light_yellow", lightScript);
 
+	game.addScript("lights", "col2", colScript);
+
+	game.addScript("lights", "Wkey", keyScript);
+	game.addScript("lights", "Akey", keyScript);
+	game.addScript("lights", "Skey", keyScript);
+	game.addScript("lights", "Dkey", keyScript);
+
 	game.addInstruction(plita_pressed, plita_pressed_instruction);
+	game.addInstruction(key_pressed, key_pressed_instruction);
 
 	game.addPropertiesSetsConfig("resources/properties.txt");
 

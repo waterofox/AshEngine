@@ -437,7 +437,6 @@ std::map<std::string, std::string> GameEngine::getFinishedProperties(const std::
 
 void ash::GameEngine::targetCollions()
 {
-	sf::FloatRect objBounds;
 	sf::Vector2f posBuffer;
 	
 	for (int i = 0; i < scene->size(); ++i)
@@ -449,15 +448,17 @@ void ash::GameEngine::targetCollions()
 		{
 			GameObject& obj = elemet.second;
 			if (!obj.isCollision()) { continue; }
-			objBounds = obj.getSFMlobj().getGlobalBounds();; 
 			for (auto& elemetB : objects)
 			{
 				if (&elemetB == &elemet) { continue; }
 				if (!elemetB.second.isCollision()) { continue; }
 
 				GameObject& objB = elemetB.second;
+
+				sf::FloatRect objBounds = sf::FloatRect(obj.getPosition().x + obj.getCollisionCenter().x, obj.getPosition().y + obj.getCollisionCenter().y, obj.getCollisionSize().width, obj.getCollisionSize().height);
+				sf::FloatRect objBBounds = sf::FloatRect(objB.getPosition().x + objB.getCollisionCenter().x, objB.getPosition().y + objB.getCollisionCenter().y, objB.getCollisionSize().width, objB.getCollisionSize().height);
 				
-				if (objBounds.intersects(objB.getSFMlobj().getGlobalBounds()))
+				if (objBounds.intersects(objBBounds))
 				{
 					posBuffer = obj.getPreviosPosition();
 					obj.setPosition(posBuffer);
