@@ -7,12 +7,6 @@
 
 namespace ash
 {
-	enum objectType
-	{
-		staticType = 0,
-		dynamicType = 1,
-		collisionType = 2
-	};
 	struct Sizef
 	{
 		float width = 0;
@@ -32,7 +26,7 @@ namespace ash
 	};
 	class GameObject
 	{
-		private:
+	private:
 		//the core
 		sf::Sprite objSprite; 
 		std::string name = "none";

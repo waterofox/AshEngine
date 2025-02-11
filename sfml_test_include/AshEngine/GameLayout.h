@@ -8,6 +8,12 @@
 
 namespace ash
 {
+	enum objectType
+	{
+		staticType = 0,
+		dynamicType = 1,
+		collisionType = 2
+	};
 	class GameLayout 
 	{
 	private:
