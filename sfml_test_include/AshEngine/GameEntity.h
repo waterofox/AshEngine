@@ -21,11 +21,8 @@ namespace ash
 	private:
 		std::string entityName = "none";
 
-		//texturing
-		bool textureRepeatable = false;
-
 		//draw
-		bool drawable = true;
+		bool drawable = true;//todo оптимизация!!!!!
 		bool visible = true;
 
 		//properties
@@ -34,30 +31,33 @@ namespace ash
 		std::map<std::string, bool>* p_boolProperties = nullptr;
 
 		//move
-		sf::Vector2f previousPosition;
+		sf::Vector2f previousPosition = sf::Vector2f(0,0);
 
 		//collision
 		bool colliding = false;
-		sf::FloatRect collisionSize;
-		sf::Vector2f collisionPosition;
+		sf::FloatRect collisionSize = sf::FloatRect(0,0,0,0);
+		sf::Vector2f collisionPosition = sf::Vector2f(0,0);
 
 		//public fields
 	public:
 		
 		//move fields
-		bool moveUp;
-		bool moveLeft;
-		bool moveDown;
-		bool moveRight;
+		bool moveUp = false;
+		bool moveLeft = false;
+		bool moveDown = false;
+		bool moveRight = false;
 
 	private:
+		void clearProperties();
 
 	public:
-		//constructors & distructor
-		GameEntity();
+		//constructors & distructor & operator = 
+		GameEntity() {}
 		GameEntity(const GameEntity& entityB);
 
 		~GameEntity();
+
+		GameEntity& operator=(const GameEntity& entityB);
 
 		//set
 		void setToDefault();
@@ -66,11 +66,6 @@ namespace ash
 		std::string getName() { return entityName; }
 
 		void setName(std::string name) { entityName = name; }
-
-		//getters & setters <texturing>
-		bool isTextureRepeatable() { return textureRepeatable; }
-
-		void setTextureRepeatable(bool arg) { textureRepeatable = arg; }
 
 		//getters & setters <draw>
 		bool isDrawable() { return drawable; }
@@ -165,6 +160,7 @@ namespace ash
 		sf::Vector2f getPreviousPosition() { return previousPosition; }
 
 		void setPreviousPosition(sf::Vector2f pos) { previousPosition = pos; }
+		void stopMoving();
 
 		//getters & setters <collision>
 		bool isColliding() { return colliding; }
