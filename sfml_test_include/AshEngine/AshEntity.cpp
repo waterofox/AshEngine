@@ -1,9 +1,9 @@
-#include "GameEntity.h"
+#include "AshEntity.h"
 using namespace ash;
 
 #define entity (*this)
 
-void ash::GameEntity::clearProperties()
+void ash::AshEntity::clearProperties()
 {
 	if (entity.p_intProperties != nullptr)
 	{
@@ -22,11 +22,12 @@ void ash::GameEntity::clearProperties()
 	}
 }
 
-GameEntity::GameEntity(const GameEntity& entityB)
+AshEntity::AshEntity(const AshEntity& entityB)
 {
 	entity.entityName = entityB.entityName;
 
 	entity.drawable = entityB.drawable;
+	entity.updatable = entityB.updatable;
 	entity.visible = entityB.visible;
 
 	entity.clearProperties();
@@ -58,11 +59,12 @@ GameEntity::GameEntity(const GameEntity& entityB)
 	entity.setTexture(*(entityB.getTexture()));//todo если текстура не отображается, смотри и переписывай  это
 	
 }
-GameEntity& GameEntity::operator=(const GameEntity& entityB)
+AshEntity& AshEntity::operator=(const AshEntity& entityB)
 {
 	entity.entityName = entityB.entityName;
 
 	entity.drawable = entityB.drawable;
+	entity.updatable = entityB.updatable;
 	entity.visible = entityB.visible;
 
 	entity.clearProperties();
@@ -96,12 +98,12 @@ GameEntity& GameEntity::operator=(const GameEntity& entityB)
 	return entity;
 }
 
-GameEntity::~GameEntity()
+AshEntity::~AshEntity()
 {
 	clearProperties();
 }
 
-void GameEntity::setToDefault()
+void AshEntity::setToDefault()
 {
 	entity.entityName = "none";
 
@@ -118,7 +120,7 @@ void GameEntity::setToDefault()
 	stopMoving();
 }
 
-void ash::GameEntity::stopMoving()
+void ash::AshEntity::stopMoving()
 {
 	moveUp = false;
 	moveLeft = false;

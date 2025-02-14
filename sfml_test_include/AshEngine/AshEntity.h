@@ -15,7 +15,7 @@ namespace ash
 		p_bool = 3,
 	};
 
-	class GameEntity : public sf::Sprite
+	class AshEntity : public sf::Sprite
 	{
 		//private fields
 	private:
@@ -23,6 +23,7 @@ namespace ash
 
 		//draw
 		bool drawable = true;//todo оптимизация!!!!!
+		bool updatable = false; //todo нужно ли просчитывать логику объекта, пока он не в хоне видимости 
 		bool visible = true;
 
 		//properties
@@ -52,12 +53,12 @@ namespace ash
 
 	public:
 		//constructors & distructor & operator = 
-		GameEntity() {}
-		GameEntity(const GameEntity& entityB);
+		AshEntity() {}
+		AshEntity(const AshEntity& entityB);
 
-		~GameEntity();
+		~AshEntity();
 
-		GameEntity& operator=(const GameEntity& entityB);
+		AshEntity& operator=(const AshEntity& entityB);
 
 		//set
 		void setToDefault();
@@ -70,9 +71,11 @@ namespace ash
 		//getters & setters <draw>
 		bool isDrawable() { return drawable; }
 		bool isVisible() { return visible; }
+		bool isUpdatable() { return updatable; }
 
-		bool setDrawable(bool arg) { drawable = arg; }
-		bool setVisible(bool arg) { visible = arg; }
+		void setDrawable(bool arg) { drawable = arg; }
+		void setVisible(bool arg) { visible = arg; }
+		void setUpdatable(bool arg) { updatable = arg; }
 
 		//getters & setters <properties>
 		template <typename T>
