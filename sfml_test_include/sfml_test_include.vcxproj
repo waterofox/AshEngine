@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AshEngine\AshCore.cpp" />
     <ClCompile Include="AshEngine\GameEngine.cpp" />
     <ClCompile Include="AshEngine\AshEntity.cpp" />
     <ClCompile Include="AshEngine\GameLayout.cpp" />
@@ -27,6 +28,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AshEngine\AshCore.h" />
     <ClInclude Include="AshEngine\AshEngine.h" />
     <ClInclude Include="AshEngine\GameEngine.h" />
     <ClInclude Include="AshEngine\AshEntity.h" />
