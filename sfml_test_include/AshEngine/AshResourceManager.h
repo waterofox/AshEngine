@@ -26,10 +26,10 @@ namespace ash {
 		~AshResourceManager() {}
 
 		sf::Texture& loadTextureFromDir(const std::string& texturePath);
-		void dropTexture(sf::Texture* texturePointer);
+		void dropTexture(const sf::Texture* texturePointer);
 
 		sf::Font& loadFontFromDir(const std::string& fontPath);
-		void dropFont(sf::Font* fontPointer);
+		void dropFont(const sf::Font* fontPointer);
 
 		sf::Texture& getTexture(const std::string& textureName);
 		sf::Font& getFont(const std::string& fontName);

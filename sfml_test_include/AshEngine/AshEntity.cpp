@@ -24,7 +24,13 @@ void ash::AshEntity::clearProperties()
 
 AshEntity::AshEntity(const AshEntity& entityB)
 {
+	entity.setScale(entityB.getScale());
+	entity.setPosition(entityB.getPosition());
+	entity.setTextureRect(entityB.getTextureRect());
+	entity.setOrigin(entityB.getOrigin());
+
 	entity.entityName = entityB.entityName;
+	entity.texturePath = entityB.texturePath;
 
 	entity.drawable = entityB.drawable;
 	entity.updatable = entityB.updatable;
@@ -55,13 +61,17 @@ AshEntity::AshEntity(const AshEntity& entityB)
 	entity.moveLeft = entityB.moveLeft;
 	entity.moveDown = entityB.moveDown;
 	entity.moveRight = entityB.moveRight;
-
-	entity.setTexture(*(entityB.getTexture()));//todo если текстура не отображается, смотри и переписывай  это
 	
 }
 AshEntity& AshEntity::operator=(const AshEntity& entityB)
 {
+	entity.setScale(entityB.getScale());
+	entity.setPosition(entityB.getPosition());
+	entity.setTextureRect(entityB.getTextureRect());
+	entity.setOrigin(entityB.getOrigin());
+
 	entity.entityName = entityB.entityName;
+	entity.texturePath = entityB.texturePath;
 
 	entity.drawable = entityB.drawable;
 	entity.updatable = entityB.updatable;
@@ -92,8 +102,6 @@ AshEntity& AshEntity::operator=(const AshEntity& entityB)
 	entity.moveLeft = entityB.moveLeft;
 	entity.moveDown = entityB.moveDown;
 	entity.moveRight = entityB.moveRight;
-
-	entity.setTexture(*(entityB.getTexture()));//todo если текстура не отображается, смотри и переписывай  это
 
 	return entity;
 }

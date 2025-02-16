@@ -4,7 +4,7 @@ using namespace ash;
 
 AshResourceManager::AshResourceManager()
 {
-	resourceDir = "../resources/";
+	resourceDir = "resources/";
 	assetsDir = "gameassets/";
 	fontsDir = "fonts/";
 }
@@ -15,7 +15,7 @@ sf::Texture& AshResourceManager::loadTextureFromDir(const std::string& pathInDir
 	
 	return loadedTextures[pathInDir];
 }
-void  AshResourceManager::dropTexture(sf::Texture* texturePointer)
+void  AshResourceManager::dropTexture(const sf::Texture* texturePointer)
 {
 	for (auto& texture : loadedTextures)
 	{
@@ -35,7 +35,7 @@ sf::Font& AshResourceManager::loadFontFromDir(const std::string& pathInDir)
 
 	return loadedFonts[pathInDir];
 }
-void AshResourceManager::dropFont(sf::Font* fontPointer)
+void AshResourceManager::dropFont(const sf::Font* fontPointer)
 {
 	for (auto& font : loadedFonts)
 	{

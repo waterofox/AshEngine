@@ -22,7 +22,8 @@ namespace ash
 		std::string entityName = "none";
 
 		//draw
-		bool drawable = true;//todo оптимизация!!!!!
+		std::string texturePath;
+		bool drawable = false;//todo оптимизация!!!!!
 		bool updatable = false; //todo нужно ли просчитывать логику объекта, пока он не в хоне видимости 
 		bool visible = true;
 
@@ -69,10 +70,12 @@ namespace ash
 		void setName(std::string name) { entityName = name; }
 
 		//getters & setters <draw>
+		std::string getTexturePath() { return texturePath; }
 		bool isDrawable() { return drawable; }
 		bool isVisible() { return visible; }
 		bool isUpdatable() { return updatable; }
-
+		
+		void setTexturePath(std::string path) { texturePath = path; }
 		void setDrawable(bool arg) { drawable = arg; }
 		void setVisible(bool arg) { visible = arg; }
 		void setUpdatable(bool arg) { updatable = arg; }

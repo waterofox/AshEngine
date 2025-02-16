@@ -1,13 +1,15 @@
 #pragma once
 #include "AshEntity.h"
 #include "AshResourceManager.h"
+
 #include "queue"
+#include "fstream"
 
 namespace ash {
 	class AshCore
 	{
 		//some types
-		using sceneType = std::map<int, std::vector<AshEntity>>;
+		using sceneType = std::map<int, std::map<std::string,AshEntity>>;
 		using script = void(*)(AshCore*, AshEntity*);
 		using eventHandling = void(*)(AshCore&);
 		template <typename T>
@@ -18,7 +20,7 @@ namespace ash {
 		AshResourceManager resourceManager;
 
 		//scene
-		std::string sceneDir = "../scenes/";
+		std::string sceneDir = "resources/scenes/";
 		std::string actualSceneName;
 		sceneType* actualScene = nullptr;
 		bool sceneReady = false;
@@ -48,7 +50,7 @@ namespace ash {
 
 		//camera
 		sf::View camera;
-		bool dynamicCamera = false;
+		bool dynamicCamera = true;
 		bool fullscreen = false;
 
 		//process methods
@@ -56,13 +58,16 @@ namespace ash {
 		void eventHandlingStandart();
 		void update();
 		void render();
+		void updateTextures();
 		void targetCollions();
 
 	public:
 		AshCore(const unsigned int& width, const int& height,const unsigned int& fps, const std::string& windowTitle);
 		~AshCore() { if (actualScene != nullptr) { delete actualScene; actualScene = nullptr; } }
 
+		//for usres
 		void startEngine() { run(); }
+		AshEntity& getEntity(const std::string& name);
 
 		AshResourceManager& getResourceManager() { return resourceManager; }
 

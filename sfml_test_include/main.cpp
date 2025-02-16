@@ -19,5 +19,7 @@ int main()
 {
 	AshCore engine(640, 480, 60, "AshEngineWindow");
 	engine.setEventHandlingFunction(eventHandlingFunction);
+	engine.loadScene("testScene.txt");
+
 	engine.startEngine();
 }
