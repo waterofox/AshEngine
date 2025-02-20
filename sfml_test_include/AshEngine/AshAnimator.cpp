@@ -79,5 +79,10 @@ void ash::AshAnimator::setCurrentFrame(const std::string& textureToEnabelAnimati
 
 ash::AshAnimator::animation& ash::AshAnimator::getAnimation(const std::string& texture)
 {
-	// TODO: вставьте здесь оператор return
+	auto animationIter = animationsLibrary.find(texture);
+	if (animationIter != animationsLibrary.end())
+	{
+		return (*animationIter).second;
+	}
+	std::cout << "ANIMATION ERROR: no animation for <" + texture + ">\n";
 }
