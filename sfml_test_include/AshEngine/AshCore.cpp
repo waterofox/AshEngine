@@ -52,7 +52,7 @@ void ash::AshCore::update()
 		camera.setCenter(player.getGlobalBounds().getPosition());
 	}
 
-	updateTextures();
+	updateTextures(); //to do. наверное стоит обновлять объекты вместе с их текстурами и анимациями, а не по отдельности
 	
 }
 

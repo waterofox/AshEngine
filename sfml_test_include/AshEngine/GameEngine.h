@@ -3,7 +3,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-#include "GameLayout.h"
 
 #include <iostream>
 #include <fstream>

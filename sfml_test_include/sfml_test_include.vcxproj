@@ -19,21 +19,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AshEngine\AshAnimator.cpp" />
     <ClCompile Include="AshEngine\AshCore.cpp" />
-    <ClCompile Include="AshEngine\GameEngine.cpp" />
     <ClCompile Include="AshEngine\AshEntity.cpp" />
-    <ClCompile Include="AshEngine\GameLayout.cpp" />
-    <ClCompile Include="AshEngine\GameObject.cpp" />
     <ClCompile Include="AshEngine\AshResourceManager.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AshEngine\AshAnimator.h" />
     <ClInclude Include="AshEngine\AshCore.h" />
     <ClInclude Include="AshEngine\AshEngine.h" />
-    <ClInclude Include="AshEngine\GameEngine.h" />
     <ClInclude Include="AshEngine\AshEntity.h" />
-    <ClInclude Include="AshEngine\GameLayout.h" />
-    <ClInclude Include="AshEngine\GameObject.h" />
     <ClInclude Include="AshEngine\AshResourceManager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
