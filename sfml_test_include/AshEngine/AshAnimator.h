@@ -9,6 +9,7 @@ namespace ash
 {
 	class AshAnimator
 	{
+	public:
 		struct animation
 		{
 			int frameCount = 1;
@@ -24,6 +25,14 @@ namespace ash
 				currentFrame = animationB.currentFrame;
 				enable = animationB.enable;
 				animationTimer = animationB.animationTimer;
+			}
+			void clear()
+			{
+				frameCount = 1;
+				framePerSeconds = 24;
+				currentFrame = 0;
+				enable = false;
+				animationTimer = sf::Time::Zero;
 			}
 		};
 

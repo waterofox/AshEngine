@@ -52,8 +52,9 @@ void ash::AshCore::update()
 		camera.setCenter(player.getGlobalBounds().getPosition());
 	}
 
-	updateTextures(); //to do. наверное стоит обновлять объекты вместе с их текстурами и анимациями, а не по отдельности
-	
+	//todo место для обработки скриптов единичного вызова
+	updateTextures(); //todo. наверное стоит обновлять объекты вместе с их текстурами и анимациями, а не по отдельности
+	updateEntity();
 }
 
 void ash::AshCore::render()
@@ -67,7 +68,7 @@ void ash::AshCore::render()
 			for (auto& element : lay.second)
 			{
 				AshEntity& entity = element.second;
-				if (!entity.isVisible())
+				if (!entity.isVisible() or !entity.isDrawable())
 				{
 					continue;
 				}
@@ -114,6 +115,27 @@ void ash::AshCore::updateTextures()
 	}
 }
 
+void ash::AshCore::updateEntity()
+{
+	bool areScriptsExist = false;
+	auto scriptsBaseIter = scriptsBase.find(actualSceneName);
+	if (scriptsBaseIter != scriptsBase.end()) { areScriptsExist = true; }
+	for (auto& lay : *actualScene)
+	{
+		for (auto& element : lay.second)
+		{
+			AshEntity& entity = element.second;
+			if (areScriptsExist)
+			{
+				auto scriptIter = (*scriptsBaseIter).second.find(entity.getName());
+				if (scriptIter != (*scriptsBaseIter).second.end()) { (*scriptIter).second(this, entity); }
+			}
+
+			animator.updateAnimation(deltaTime, entity);
+		}
+	}
+}
+
 ash::AshCore::AshCore(const unsigned int& width, const int& height, const unsigned int& fps, const std::string& windowTitle)
 {
 	framePerSeconds = fps;
@@ -153,6 +175,7 @@ void ash::AshCore::loadScene(const std::string& sceneName)
 		return;
 	}
 	AshEntity entityBuffer;
+	AshAnimator::animation animationBuffer;
 	std::string key;
 	std::string value;
 	int layIndex = -1;
@@ -268,6 +291,12 @@ void ash::AshCore::loadScene(const std::string& sceneName)
 				return;
 			}
 		}
+		//todo Нужно короче переписать ресурс менеджер и добавить такую же библиотеку с парамептрами текстур как animtionLibrary из AshAnimator
+		//текстуры в видюхе зранить дорого, а пару байт в оперативе - нет
+		else if (key == "repeated:")
+		{
+			sceneFile >> value;
+		}
 		else if (key == "collision:")
 		{
 			sceneFile >> value;
@@ -279,11 +308,37 @@ void ash::AshCore::loadScene(const std::string& sceneName)
 				return;
 			}
 		}
+		else if (key == "animated:")
+		{
+			sceneFile >> value;
+			if (value == "true")
+			{
+				animationBuffer.enable = true;
+				animator.addAnimation(entityBuffer.getTexturePath(), animationBuffer);
+			}
+			else
+			{
+				animationBuffer.enable = false;
+			}
+		}
+		else if (key == "frame_count:")
+		{
+			sceneFile >> value;
+			if (!animationBuffer.enable) { continue; }
+			animator.getAnimation(entityBuffer.getTexturePath()).frameCount = std::stoi(value);
+		}
+		else if (key == "fps:")
+		{
+			sceneFile >> value;
+			if (!animationBuffer.enable) { continue; }
+			animator.getAnimation(entityBuffer.getTexturePath()).framePerSeconds = std::stoi(value);
+		}
 		else if (key == "end.")
 		{
 			std::map<std::string, AshEntity>& actualLay = (*actualScene)[layIndex];
 			actualLay.insert(std::pair<std::string,AshEntity>(entityBuffer.getName(),entityBuffer));
 			entityBuffer.setToDefault();
+			animationBuffer.clear();
 		}
 		else
 		{
@@ -294,4 +349,21 @@ void ash::AshCore::loadScene(const std::string& sceneName)
 		}
 	}
 	sceneReady = true;
+}
+
+void ash::AshCore::addScript(std::string sceneName, std::string entityName, script yourScript)
+{
+	std::pair<std::string, script> newScript(entityName, yourScript);
+	auto sceneIter = scriptsBase.find(sceneName);
+	if (sceneIter != scriptsBase.end())
+	{
+		std::map<std::string, script>& actualScriptBox = (*sceneIter).second;
+		actualScriptBox.insert(std::pair<std::string, script>(entityName, yourScript));
+	}
+	else
+	{
+		scriptsBase.insert(std::pair<std::string,std::map<std::string,script>>(sceneName,std::map<std::string,script>()));
+		scriptsBase[sceneName].insert(std::pair<std::string, script>(entityName, yourScript));
+	}
+
 }

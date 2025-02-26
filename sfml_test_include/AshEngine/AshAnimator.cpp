@@ -10,7 +10,6 @@ void ash::AshAnimator::updateAnimation(const sf::Time& deltaTime, AshEntity& ent
 		if (animationToPlay.animationTimer.asSeconds() >= 1.0 / animationToPlay.framePerSeconds)
 		{
 			animationToPlay.animationTimer = sf::Time::Zero;
-			//todo какая то хуёня с типами
 			animationToPlay.currentFrame = (animationToPlay.currentFrame + 1) % animationToPlay.frameCount;
 		}
 		entity.setTextureRect(sf::IntRect(int(animationToPlay.currentFrame) * (entity.getTexture()->getSize().x / animationToPlay.frameCount), 0, entity.getTexture()->getSize().y, entity.getTexture()->getSize().x / animationToPlay.frameCount));

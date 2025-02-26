@@ -1,6 +1,7 @@
 #pragma once
 #include "AshEntity.h"
 #include "AshResourceManager.h"
+#include "AshAnimator.h"
 
 #include "queue"
 #include "fstream"
@@ -10,7 +11,7 @@ namespace ash {
 	{
 		//some types
 		using sceneType = std::map<int, std::map<std::string,AshEntity>>;
-		using script = void(*)(AshCore*, AshEntity*);
+		using script = void(*)(AshCore*, AshEntity&);
 		using eventHandling = void(*)(AshCore&);
 		template <typename T>
 		using mapByScene = std::map<std::string, T>;
@@ -18,6 +19,7 @@ namespace ash {
 
 		//resource
 		AshResourceManager resourceManager;
+		AshAnimator animator;
 
 		//scene
 		std::string sceneDir = "resources/scenes/";
@@ -39,7 +41,7 @@ namespace ash {
 		eventHandling evHandlingFunction = nullptr;
 		bool isCustomEvHandLoading = false;
 
-		mapByScene<std::pair<std::string, script>> scriptsBase;
+		mapByScene<std::map<std::string, script>> scriptsBase;
 		mapByScene<std::map<int, script>> slotsBase;
 
 		std::queue<std::pair<int, AshEntity*>> signalsQueue;
@@ -59,6 +61,7 @@ namespace ash {
 		void update();
 		void render();
 		void updateTextures();
+		void updateEntity();
 		void targetCollions();
 
 	public:
@@ -70,6 +73,7 @@ namespace ash {
 		AshEntity& getEntity(const std::string& name);
 
 		AshResourceManager& getResourceManager() { return resourceManager; }
+		AshAnimator& getAnimator() { return animator; }
 
 		//getters & setters <scene>
 		sceneType* getActualScene() { return actualScene; }
@@ -85,7 +89,10 @@ namespace ash {
 
 		//getters & setters <process>
 		sf::Event& getActualEvent() { return actualEvent; }
+		void addScript(std::string sceneName, std::string entityName, script yourScript);
 		void setEventHandlingFunction(eventHandling function) { evHandlingFunction = function; }
+		
+
 
 	};
 }
