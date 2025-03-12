@@ -101,7 +101,7 @@ void ash::AshCore::updateTextures()
 			if (!cameraRect.intersects(entityBounds))
 			{
 				entity.setDrawable(false);
-				resourceManager.dropTexture(entity.getTexture());
+				resourceManager.dropTexture(entity.getTexturePath());
 			}
 			else
 			{
@@ -110,6 +110,10 @@ void ash::AshCore::updateTextures()
 					entity.setDrawable(true);
 					entity.setTexture(resourceManager.getTexture(entity.getTexturePath()));
 				}
+			}
+			if (entity.isDrawable()) 
+			{
+				AshResourceManager::textureSettings& settingToUpdate =  
 			}
 		}
 	}
@@ -174,8 +178,11 @@ void ash::AshCore::loadScene(const std::string& sceneName)
 		std::cout << "CORE ERROR: no scene <" + sceneName + ">\n";
 		return;
 	}
+
 	AshEntity entityBuffer;
-	AshAnimator::animation animationBuffer;
+	AshAnimator::animation animationBuffer; 
+	AshResourceManager::textureSettings textureBuffer;
+
 	std::string key;
 	std::string value;
 	int layIndex = -1;
@@ -278,7 +285,9 @@ void ash::AshCore::loadScene(const std::string& sceneName)
 		else if (key == "url:")
 		{
 			sceneFile >> value;
-			entityBuffer.setTexturePath(value);                     
+			entityBuffer.setTexturePath(value);       
+			AshResourceManager::textureSettings newTexture;
+			//todo это всё хуйня. Напиши класс текстуры, в котором будут sf::Texure и поля для изменения этой ьектсуры. Ну чтоб можно было нормально фиксировать изменения
 		}
 		else if (key == "visible:")
 		{
@@ -291,8 +300,6 @@ void ash::AshCore::loadScene(const std::string& sceneName)
 				return;
 			}
 		}
-		//todo Нужно короче переписать ресурс менеджер и добавить такую же библиотеку с парамептрами текстур как animtionLibrary из AshAnimator
-		//текстуры в видюхе зранить дорого, а пару байт в оперативе - нет
 		else if (key == "repeated:")
 		{
 			sceneFile >> value;

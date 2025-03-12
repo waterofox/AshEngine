@@ -23,7 +23,7 @@ namespace ash
 
 		//draw
 		std::string texturePath;
-		bool drawable = false;//todo оптимизация!!!!!
+		bool drawable = false;
 		bool updatable = false; //todo нужно ли просчитывать логику объекта, пока он не в хоне видимости 
 		bool visible = true;
 

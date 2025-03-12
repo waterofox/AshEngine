@@ -41,7 +41,7 @@ void ash::AshAnimator::removeAnimation(const std::string& textureToRemove)
 		animationsLibrary.erase(animationIter);
 	}
 }
-//todo переименуй названия параметров в текстурами
+
 void ash::AshAnimator::setEnabelAnimation(const std::string& textureToEnabelAnimation, const bool& arg)
 {
 	auto animationIter = animationsLibrary.find(textureToEnabelAnimation);
