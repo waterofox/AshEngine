@@ -53,13 +53,14 @@ void ash::AshCore::update()
 	}
 
 	//todo место для обработки скриптов единичного вызова
-	updateTextures(); //todo. наверное стоит обновлять объекты вместе с их текстурами и анимациями, а не по отдельности
+	updateTextures();
 	updateEntity();
 }
 
 void ash::AshCore::render()
 {
 	mainWindow.clear();
+	mainWindow.setView(camera);
 
 	if (actualScene != nullptr)
 	{
@@ -84,39 +85,45 @@ void ash::AshCore::updateTextures()
 {
 	if (actualScene == nullptr) { return; }
 
-	sf::FloatRect cameraRect;
-	sf::FloatRect entityBounds;
-	cameraRect.width = camera.getSize().x;
-	cameraRect.height = camera.getSize().y;
-	cameraRect.left = camera.getCenter().x - camera.getSize().x / 2;
-	cameraRect.top = camera.getCenter().y - camera.getSize().y / 2;
+	//preparing
+	updateCameraBounds();
+	std::map<std::string, std::pair<sf::Texture*, AshResourceManager::textureSettings>>& loadedTextures = resourceManager.getMapOfLoadedTextures();
+	for (auto& texture : loadedTextures){texture.second.second.countOfVisibleEntity = 0;}
 
-
+	//process
 	for (auto& lay : *actualScene)
 	{
-		for (auto& element : lay.second)
+		for (auto& elementOfLay : lay.second)
 		{
-			AshEntity& entity = element.second;
-			entityBounds = entity.getGlobalBounds();
-			if (!cameraRect.intersects(entityBounds))
-			{
-				entity.setDrawable(false);
-				resourceManager.dropTexture(entity.getTexturePath());
-			}
-			else
+			AshEntity& entity = elementOfLay.second;
+			if (camBounds.intersects(entity.getGlobalBounds()))
 			{
 				if (!entity.isDrawable())
 				{
 					entity.setDrawable(true);
 					entity.setTexture(resourceManager.getTexture(entity.getTexturePath()));
 				}
+				AshResourceManager::textureSettings& settingToUpdate = loadedTextures[entity.getTexturePath()].second;
+				sf::Texture& textureWithFreshSettings = *loadedTextures[entity.getTexturePath()].first;
+
+				++loadedTextures[entity.getTexturePath()].second.countOfVisibleEntity;
+				settingToUpdate.updateTextureSettings(textureWithFreshSettings);
+				continue;
 			}
-			if (entity.isDrawable()) 
-			{
-				AshResourceManager::textureSettings& settingToUpdate =  
-			}
+			//the way, when entitity isn't in camera view
+			if (entity.isDrawable()) {entity.setDrawable(false);} //if entity was in camera view on previous iteration of the game loop
 		}
 	}
+	for (auto& texture : loadedTextures)
+	{
+		if (texture.second.second.countOfVisibleEntity == 0) { resourceManager.dropTexture(texture.first); }
+	}
+}
+
+void ash::AshCore::updateCameraBounds()
+{
+	camPosition = sf::Vector2f(camCenter.x - camSize.x / 2, camCenter.y - camSize.y / 2);
+	camBounds = sf::FloatRect(camPosition, camSize);
 }
 
 void ash::AshCore::updateEntity()
@@ -287,7 +294,6 @@ void ash::AshCore::loadScene(const std::string& sceneName)
 			sceneFile >> value;
 			entityBuffer.setTexturePath(value);       
 			AshResourceManager::textureSettings newTexture;
-			//todo это всё хуйня. Напиши класс текстуры, в котором будут sf::Texure и поля для изменения этой ьектсуры. Ну чтоб можно было нормально фиксировать изменения
 		}
 		else if (key == "visible:")
 		{

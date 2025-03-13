@@ -7,6 +7,7 @@
 
 #include <SFML/Graphics.hpp>
 
+
 namespace ash {
 	class AshResourceManager
 	{
@@ -17,12 +18,18 @@ namespace ash {
 			bool repeated = false;
 			bool smooth = false;
 			bool sRgb = false;
+
+			//во время цыкла рендера нужно считать, ск. объектов обладают той или иной текстурой
+			//нет не рендера. а цикле обновления текстур
+			unsigned int countOfVisibleEntity = 0;
+			
 			textureSettings() {}
 			textureSettings(const textureSettings& settigns)
 			{
 				repeated = settigns.repeated;
 				smooth = settigns.smooth;
 				sRgb = settigns.sRgb;
+				countOfVisibleEntity = settigns.countOfVisibleEntity;
 			}
 			void clear()
 			{
@@ -45,7 +52,8 @@ namespace ash {
 
 		//textures & fonts data
 		std::map<std::string, std::pair<sf::Texture*, textureSettings>> loadedTextures;
-		//std::map<std::string, sf::Texture> loadedTextures;
+
+
 		//todo переделай методы шрифтов на подобии методов текстур
 		std::map<std::string, sf::Font>loadedFonts;
 
@@ -55,12 +63,10 @@ namespace ash {
 		~AshResourceManager() {}
 
 		sf::Texture& loadTextureFromDir(const std::string& texturePath);
-		//void dropTexture(const sf::Texture* texturePointer);
 		void dropTexture(const std::string& pathInDir);
 		void addTexture(const std::string, const AshResourceManager::textureSettings settings);
+		std::map<std::string, std::pair<sf::Texture*, textureSettings>>& getMapOfLoadedTextures();
 
-		//todo Переделай пожалуйста вот это когда-нибудь потом
-		//settersForTextires
 
 		sf::Font& loadFontFromDir(const std::string& fontPath);
 		void dropFont(const sf::Font* fontPointer);

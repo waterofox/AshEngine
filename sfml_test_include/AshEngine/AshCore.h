@@ -54,6 +54,11 @@ namespace ash {
 		sf::View camera;
 		bool dynamicCamera = true;
 		bool fullscreen = false;
+		
+		const sf::Vector2f& camSize = camera.getSize();
+		const sf::Vector2f& camCenter = camera.getCenter();
+		sf::Vector2f camPosition = sf::Vector2f(camCenter.x - camSize.x / 2, camCenter.y - camSize.y / 2);
+		sf::FloatRect camBounds = sf::FloatRect(camPosition, camSize);
 
 		//process methods
 		void run();
@@ -61,6 +66,7 @@ namespace ash {
 		void update();
 		void render();
 		void updateTextures();
+		void updateCameraBounds();
 		void updateEntity();
 		void targetCollions();
 

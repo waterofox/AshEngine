@@ -36,24 +36,34 @@ void eventHandlingFunction(AshCore& theCore)
 
 void testScript(AshCore* core, AshEntity& entity)
 {
+	AshResourceManager& manager = core->getResourceManager();
+	sf::Texture& playerTexture = manager.getTexture(entity.getTexturePath());
+	bool moveFlag = false;
+	playerTexture.setSmooth(!moveFlag);
 	if (entity.moveUp)
 	{
 		entity.move(sf::Vector2f(0, -playerSpeed) * core->getDeltaTime().asSeconds());
+		moveFlag = true;
 	}
 	if (entity.moveRight)
 	{
 		entity.move(sf::Vector2f(playerSpeed, 0) * core->getDeltaTime().asSeconds());
+		moveFlag = true;
 	}
 	if (entity.moveDown)
 	{
 		entity.move(sf::Vector2f(0, playerSpeed) * core->getDeltaTime().asSeconds());
+		moveFlag = true;
 	}
 	if (entity.moveLeft)
 	{
 		entity.move(sf::Vector2f(-playerSpeed,0) * core->getDeltaTime().asSeconds());
+		moveFlag = true;
 	}
+	
+	playerTexture.setSmooth(!moveFlag);
 
-
+	
 }
 
 int main()
