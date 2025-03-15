@@ -51,8 +51,7 @@ void ash::AshCore::update()
 		AshEntity& player = getEntity("player");
 		camera.setCenter(player.getGlobalBounds().getPosition());
 	}
-
-	//todo место для обработки скриптов единичного вызова
+	processSignals();
 	updateTextures();
 	updateEntity();
 }
@@ -126,6 +125,21 @@ void ash::AshCore::updateCameraBounds()
 	camBounds = sf::FloatRect(camPosition, camSize);
 }
 
+void ash::AshCore::processSignals()
+{
+	auto slotsBaseIter = slotsBase.find(actualSceneName);
+	if (slotsBaseIter == slotsBase.end()) { return; }
+
+	std::map<int, script>& actualSlotsBase = (*slotsBaseIter).second;
+	while (!signalsQueue.empty())
+	{
+		std::pair<int, AshEntity*>& sender = signalsQueue.front();
+		auto slotIter = actualSlotsBase.find(sender.first);
+		if (slotIter == actualSlotsBase.end()) { continue; }
+		(*slotIter).second(this, *sender.second);
+	}
+}
+
 void ash::AshCore::updateEntity()
 {
 	bool areScriptsExist = false;
@@ -175,6 +189,11 @@ AshEntity& ash::AshCore::getEntity(const std::string& name)
 	}
 	std::cout << "CORE ERROR: no entity <" + name + ">\n";
 	return emptyObject;
+}
+
+void ash::AshCore::emitSignal(const int& signalID,  AshEntity*&  entityPointer)
+{
+	signalsQueue.push(std::pair<int, AshEntity*>(signalID, entityPointer));
 }
 
 void ash::AshCore::loadScene(const std::string& sceneName)
@@ -364,19 +383,12 @@ void ash::AshCore::loadScene(const std::string& sceneName)
 	sceneReady = true;
 }
 
-void ash::AshCore::addScript(std::string sceneName, std::string entityName, script yourScript)
+void ash::AshCore::addScript(const std::string& sceneName, const std::string& entityName, script yourScript)
 {
-	std::pair<std::string, script> newScript(entityName, yourScript);
-	auto sceneIter = scriptsBase.find(sceneName);
-	if (sceneIter != scriptsBase.end())
-	{
-		std::map<std::string, script>& actualScriptBox = (*sceneIter).second;
-		actualScriptBox.insert(std::pair<std::string, script>(entityName, yourScript));
-	}
-	else
-	{
-		scriptsBase.insert(std::pair<std::string,std::map<std::string,script>>(sceneName,std::map<std::string,script>()));
-		scriptsBase[sceneName].insert(std::pair<std::string, script>(entityName, yourScript));
-	}
+	scriptsBase[sceneName][entityName] = yourScript;	
+}
 
+void ash::AshCore::addSlot(const std::string& sceneName, const int& signalID, script yourSlot)
+{
+	slotsBase[sceneName][signalID] = yourSlot;
 }

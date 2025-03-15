@@ -67,6 +67,7 @@ namespace ash {
 		void render();
 		void updateTextures();
 		void updateCameraBounds();
+		void processSignals();
 		void updateEntity();
 		void targetCollions();
 
@@ -77,6 +78,7 @@ namespace ash {
 		//for usres
 		void startEngine() { run(); }
 		AshEntity& getEntity(const std::string& name);
+		void emitSignal(const int& signlaID, AshEntity*& entityPointer);
 
 		AshResourceManager& getResourceManager() { return resourceManager; }
 		AshAnimator& getAnimator() { return animator; }
@@ -95,7 +97,8 @@ namespace ash {
 
 		//getters & setters <process>
 		sf::Event& getActualEvent() { return actualEvent; }
-		void addScript(std::string sceneName, std::string entityName, script yourScript);
+		void addScript(const std::string& sceneName,const  std::string& entityName, script yourScript);
+		void addSlot(const std::string& sceneName,const int& signalID, script yourSlot);
 		void setEventHandlingFunction(eventHandling function) { evHandlingFunction = function; }
 		
 
