@@ -34,6 +34,26 @@ void eventHandlingFunction(AshCore& theCore)
 	}
 }
 
+void scriptForTetsTextureSettings(AshCore* core, AshEntity& entity)
+{
+	AshEntity& player = core->getEntity("player");
+	if (entity.getGlobalBounds().intersects(player.getGlobalBounds()))
+	{
+		sf::Texture& textureOFEntity = core->getResourceManager().getTexture(entity.getTexturePath());
+		//todo Такой способ не является безопастным, тк. это скрипт цикла. 
+		// Если вы попытаетесь манипулировать с текстурой объекта вне поля видимости, вы можете получить ошибку об ограничении прав доступа, т.к текстуры не будет существовать в памяти.
+		// НЕобходимо выполнять проверку entity.isDrawable() если да - окей, лазай ручками
+		// Если нет, то используйте метод   getSettings и манипулируйте полученным объектом. Это безопастно и при появлении объекта в поле видимости. Он приметнит ваши новые настройки.
+		textureOFEntity.setSmooth(true);
+		return;
+	}
+	if (!entity.isDrawable())
+	{
+		AshResourceManager::textureSettings& settingsToManipulate = core->getResourceManager().getSettings(entity.getTexturePath());
+		if (settingsToManipulate.smooth) { settingsToManipulate.smooth = false; }
+	}
+}
+
 void testScript(AshCore* core, AshEntity& entity)
 {
 	AshResourceManager& manager = core->getResourceManager();
@@ -72,6 +92,7 @@ int main()
 	engine.setEventHandlingFunction(eventHandlingFunction);
 
 	engine.addScript("scene", "player", testScript);
+	engine.addScript("scene", "elka2", scriptForTetsTextureSettings);
 	engine.loadScene("testScene.txt");
 	
 	engine.startEngine();

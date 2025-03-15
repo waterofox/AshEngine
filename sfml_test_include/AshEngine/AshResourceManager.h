@@ -19,8 +19,6 @@ namespace ash {
 			bool smooth = false;
 			bool sRgb = false;
 
-			//во время цыкла рендера нужно считать, ск. объектов обладают той или иной текстурой
-			//нет не рендера. а цикле обновления текстур
 			unsigned int countOfVisibleEntity = 0;
 			
 			textureSettings() {}

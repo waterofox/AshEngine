@@ -10,7 +10,7 @@ animated: false frame_count: 1 fps: 24
 end.
 
 name: elka2 ent_x: -420 ent_y: 100 ent_width: 64 ent_height: 64 
-ent_scale_x: 1 ent_scale_y: 1 url: statickAssets/terrain/elka.png visible: true repeated: true
+ent_scale_x: 1 ent_scale_y: 1 url: statickAssets/terrain/elka2.png visible: true repeated: true
 collision: false 
 animated: false frame_count: 1 fps: 24
 end.
