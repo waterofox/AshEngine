@@ -133,10 +133,11 @@ void ash::AshCore::processSignals()
 	std::map<int, script>& actualSlotsBase = (*slotsBaseIter).second;
 	while (!signalsQueue.empty())
 	{
-		std::pair<int, AshEntity*>& sender = signalsQueue.front();
+		std::pair<int, AshEntity&>& sender = signalsQueue.front();
 		auto slotIter = actualSlotsBase.find(sender.first);
 		if (slotIter == actualSlotsBase.end()) { continue; }
-		(*slotIter).second(this, *sender.second);
+		(*slotIter).second(this, sender.second);
+		signalsQueue.pop();
 	}
 }
 
@@ -159,6 +160,54 @@ void ash::AshCore::updateEntity()
 			animator.updateAnimation(deltaTime, entity);
 		}
 	}
+}
+
+void ash::AshCore::parsProperties(const std::string& propertyName, AshEntity& entity)
+{
+	std::ifstream propertieFile(properites);
+	std::string buffer;
+	while (!propertieFile.eof())
+	{
+		propertieFile >> buffer;
+		if (buffer == propertyName + ':')
+		{
+			int count;
+			propertieFile >> count;
+			for (int i = 0; i < count; ++i)
+			{
+				propertieFile >> buffer; 
+				if (buffer == "bool")
+				{
+					propertieFile >> buffer;
+					entity.addProperty(p_bool, buffer, false);
+					bool value; propertieFile >> value;
+					entity.getBool(buffer) = value;
+				}
+				else if (buffer == "int")
+				{
+					propertieFile >> buffer;
+					entity.addProperty(p_bool, buffer, 0);
+					int value; propertieFile >> value;
+					entity.getInt(buffer) = value;
+				}
+				else if (buffer == "float")
+				{
+					propertieFile >> buffer;
+					entity.addProperty(p_bool, buffer, 0.f);
+					float value; propertieFile >> value;
+					entity.getFloat(buffer) = value;
+				}
+				else
+				{
+					std::cout << "CORE ERROR: property <" << propertyName << "> incorrect property type: " << buffer << std::endl;
+					propertieFile.close();
+					return;
+				}
+			}
+		}
+	}
+
+	propertieFile.close();
 }
 
 ash::AshCore::AshCore(const unsigned int& width, const int& height, const unsigned int& fps, const std::string& windowTitle)
@@ -191,9 +240,9 @@ AshEntity& ash::AshCore::getEntity(const std::string& name)
 	return emptyObject;
 }
 
-void ash::AshCore::emitSignal(const int& signalID,  AshEntity*&  entityPointer)
+void ash::AshCore::emitSignal(const int& signalID,  AshEntity&  entity)
 {
-	signalsQueue.push(std::pair<int, AshEntity*>(signalID, entityPointer));
+	signalsQueue.push(std::pair<int, AshEntity&>(signalID, entity));
 }
 
 void ash::AshCore::loadScene(const std::string& sceneName)
@@ -364,6 +413,11 @@ void ash::AshCore::loadScene(const std::string& sceneName)
 			sceneFile >> value;
 			if (!animationBuffer.enable) { continue; }
 			animator.getAnimation(entityBuffer.getTexturePath()).framePerSeconds = std::stoi(value);
+		}
+		else if (key == "properties:")
+		{
+			sceneFile >> value;
+			parsProperties(value, entityBuffer);
 		}
 		else if (key == "end.")
 		{

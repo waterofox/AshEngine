@@ -44,11 +44,11 @@ namespace ash {
 		mapByScene<std::map<std::string, script>> scriptsBase;
 		mapByScene<std::map<int, script>> slotsBase;
 
-		std::queue<std::pair<int, AshEntity*>> signalsQueue;
+		std::queue<std::pair<int, AshEntity&>> signalsQueue;
 
 		//game
 		unsigned int framePerSeconds = 60;
-		std::string properites = "../properties.txt";
+		std::string properites = "resources/properties.txt";
 
 		//camera
 		sf::View camera;
@@ -69,6 +69,7 @@ namespace ash {
 		void updateCameraBounds();
 		void processSignals();
 		void updateEntity();
+		void parsProperties(const std::string& propertyName, AshEntity& entity);
 		void targetCollions();
 
 	public:
@@ -78,7 +79,7 @@ namespace ash {
 		//for usres
 		void startEngine() { run(); }
 		AshEntity& getEntity(const std::string& name);
-		void emitSignal(const int& signlaID, AshEntity*& entityPointer);
+		void emitSignal(const int& signlaID, AshEntity& entity);
 
 		AshResourceManager& getResourceManager() { return resourceManager; }
 		AshAnimator& getAnimator() { return animator; }
