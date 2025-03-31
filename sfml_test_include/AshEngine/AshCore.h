@@ -89,10 +89,24 @@ namespace ash {
 		std::string getActualSceneName() { return actualSceneName; }
 
 		void loadScene(const std::string& sceneName);
+		void pushEntity(const AshEntity& entity, const int& lay);
+		void pushEntity(const AshEntity& entity, const std::string& entityName, const int& lay);
+		void addEntities(const std::map<std::string, AshEntity>& entitiesMap, const int& lay);
+		void popEntity(const std::string& entitynName, const int& lay);
+		void popEntity(const std::string& entityName);
+
+
+		//Это потом. сейчас мега впадлу
+		//todo человек может лично собирать сцену, испльхуя например метод сборки
+		//человек будет создавать сцену ввиде указателя. Выделять под него помять и заполять. 
+		//При смене сцены он будет отчищаться. Но у человека будет метод сборки конкретной сцены и её пустой указатель
+
+		//todo нет. не пойдёт. напиши структуру сцене; 
+		//void loadScene(const sceneType*& scene);
 
 		//getters & setters <time>
 		sf::Time getDeltaTime() { return deltaTime; }
-
+		
 		//getters & setters <window>
 		sf::RenderWindow& getWindow() { return mainWindow; }
 

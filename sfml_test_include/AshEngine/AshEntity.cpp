@@ -128,7 +128,7 @@ void AshEntity::setToDefault()
 	stopMoving();
 }
 
-int& ash::AshEntity::getInt(const std::string& key)
+int& ash::AshEntity::getInt(const std::string& key) const
 {
 	auto propertyIter = p_intProperties->find(key);
 	if (propertyIter != p_intProperties->end())
@@ -138,7 +138,7 @@ int& ash::AshEntity::getInt(const std::string& key)
 	throw std::out_of_range("ENTITY ERROR: " + entityName + " property <" + key + "> not found");
 }
 
-float& ash::AshEntity::getFloat(const std::string& key)
+float& ash::AshEntity::getFloat(const std::string& key) const
 {
 	auto propertyIter = p_floatProperties->find(key);
 	if (propertyIter != p_floatProperties->end())
@@ -148,7 +148,7 @@ float& ash::AshEntity::getFloat(const std::string& key)
 	throw std::out_of_range("ENTITY ERROR: " + entityName + " property <" + key + "> not found");
 }
 
-bool& ash::AshEntity::getBool(const std::string& key)
+bool& ash::AshEntity::getBool(const std::string& key) const
 {
 	auto propertyIter = p_boolProperties->find(key);
 	if (propertyIter != p_boolProperties->end())

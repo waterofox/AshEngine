@@ -247,13 +247,13 @@ void ash::AshCore::emitSignal(const int& signalID,  AshEntity&  entity)
 
 void ash::AshCore::loadScene(const std::string& sceneName)
 {
+	
 	std::ifstream sceneFile(sceneDir + sceneName);
 	if (!sceneFile.is_open())
 	{
 		std::cout << "CORE ERROR: no scene <" + sceneName + ">\n";
 		return;
 	}
-
 	AshEntity entityBuffer;
 	AshAnimator::animation animationBuffer; 
 	AshResourceManager::textureSettings textureBuffer;
@@ -261,6 +261,8 @@ void ash::AshCore::loadScene(const std::string& sceneName)
 	std::string key;
 	std::string value;
 	int layIndex = -1;
+
+	processSignals();
 
 	if (actualScene != nullptr) { delete actualScene; actualScene = nullptr; }
 	actualScene = new sceneType;
@@ -361,7 +363,7 @@ void ash::AshCore::loadScene(const std::string& sceneName)
 		{
 			sceneFile >> value;
 			entityBuffer.setTexturePath(value);       
-			AshResourceManager::textureSettings newTexture;
+			resourceManager.loadTextureFromDir(value);
 		}
 		else if (key == "visible:")
 		{
@@ -377,6 +379,14 @@ void ash::AshCore::loadScene(const std::string& sceneName)
 		else if (key == "repeated:")
 		{
 			sceneFile >> value;
+			if (value == "true") { resourceManager.getSettings(entityBuffer.getTexturePath()).repeated = true; }
+			else if (value == "false") { resourceManager.getSettings(entityBuffer.getTexturePath()).repeated = false; }
+			else
+			{
+				std::cout << "CORE ERROR: incorrect value of key <" + key + ">\n";
+				return;
+			}
+
 		}
 		else if (key == "collision:")
 		{
@@ -435,6 +445,30 @@ void ash::AshCore::loadScene(const std::string& sceneName)
 		}
 	}
 	sceneReady = true;
+}
+
+void ash::AshCore::pushEntity(const AshEntity& entity, const int& lay)
+{
+	(*actualScene)[lay][entity.getName()] = entity;
+}
+
+void ash::AshCore::pushEntity(const AshEntity& entity, const std::string& entityName, const int& lay)
+{
+	(*actualScene)[lay][entityName] = entity;
+}
+
+void ash::AshCore::addEntities(const std::map<std::string, AshEntity>& entitiesMap, const int& lay)
+{
+	std::map<std::string, AshEntity>& layToEdit = (*actualScene)[lay];
+	for (auto& entity : entitiesMap)
+	{
+		layToEdit[entity.first] = entity.second;
+	}
+}
+
+void ash::AshCore::popEntity(const std::string& entitynName, const int& lay)
+{
+	(*actualScene)[lay].erase(entitynName); //нужна проверка, существеь ли объект
 }
 
 void ash::AshCore::addScript(const std::string& sceneName, const std::string& entityName, script yourScript)

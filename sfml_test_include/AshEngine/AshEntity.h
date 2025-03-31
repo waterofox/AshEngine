@@ -66,15 +66,15 @@ namespace ash
 		void setToDefault();
 
 		//getters & setters <name>
-		std::string getName() { return entityName; }
+		std::string getName() const { return entityName; }
 
 		void setName(std::string name) { entityName = name; }
 
 		//getters & setters <draw>
-		std::string getTexturePath() { return texturePath; }
-		bool isDrawable() { return drawable; }
-		bool isVisible() { return visible; }
-		bool isUpdatable() { return updatable; }
+		std::string getTexturePath() const { return texturePath; }
+		bool isDrawable() const { return drawable; }
+		bool isVisible() const { return visible; }
+		bool isUpdatable() const { return updatable; }
 		
 		void setTexturePath(std::string path) { texturePath = path; }
 		void setDrawable(bool arg) { drawable = arg; }
@@ -130,20 +130,20 @@ namespace ash
 				break;
 			}
 		}
-		int& getInt(const std::string& key);
-		float& getFloat(const std::string& key);
-		bool& getBool(const std::string& key);
+		int& getInt(const std::string& key) const;
+		float& getFloat(const std::string& key) const;
+		bool& getBool(const std::string& key) const;
 
 		//getters & setters <move>
-		sf::Vector2f getPreviousPosition() { return previousPosition; }
+		sf::Vector2f getPreviousPosition() const { return previousPosition; }
 
 		void setPreviousPosition(sf::Vector2f pos) { previousPosition = pos; }
 		void stopMoving();
 
 		//getters & setters <collision>
-		bool isColliding() { return colliding; }
-		sf::FloatRect getCollisionSize() { return collisionSize; }
-		sf::Vector2f getCollisionPosition() { return collisionPosition; }
+		bool isColliding() const { return colliding; }
+		sf::FloatRect getCollisionSize() const { return collisionSize; }
+		sf::Vector2f getCollisionPosition() const { return collisionPosition; }
 
 		void setColliding(bool arg) { colliding = arg; }
 		void setCollisionSize(sf::FloatRect size) { collisionSize = size; }

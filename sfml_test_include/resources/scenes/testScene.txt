@@ -16,6 +16,15 @@ animated: false frame_count: 1 fps: 24
 properties: test
 end.
 
+name: elka3 ent_x: -100 ent_y: 100 ent_width: 128 ent_height: 128 
+ent_scale_x: 1 ent_scale_y: 1 url: statickAssets/terrain/elka2.png visible: true repeated: true
+collision: false 
+animated: false frame_count: 1 fps: 24
+properties: test
+end.
+
+lay
+
 name: player ent_x: 50 ent_y: 50 ent_width: 64 ent_height: 64 
 ent_scale_x: 2 ent_scale_y: 2 url: animations/scene/fire.png visible: true repeated: true
 collision: false 
