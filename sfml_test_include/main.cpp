@@ -87,6 +87,11 @@ void scriptForTetsTextureSettings(AshCore* core, AshEntity& entity)
 	}
 }
 */
+void boxscript(AshCore* core, AshEntity& box)
+{
+	AshEntity& player = core->getEntity("player");
+	box.setPosition(player.getPosition());
+}
 void testScript(AshCore* core, AshEntity& entity)
 {
 	if (entity.moveUp)
@@ -116,6 +121,7 @@ int main()
 	engine.addSlot("scene", elka_signal_out, testSlotOUT);
 
 	engine.addScript("scene", "player", testScript);
+	engine.addScript("scene", "box2", boxscript);
 	engine.addScript("scene", "elka2", scriptForTetsPropertysAndSignals);
 	engine.loadScene("testScene.txt");
 	

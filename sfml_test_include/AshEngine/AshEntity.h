@@ -38,7 +38,7 @@ namespace ash
 
 		//collision
 		bool colliding = false;
-		sf::FloatRect collisionSize = sf::FloatRect(0,0,0,0);
+		sf::Vector2f collisionSize = sf::Vector2f(0,0);
 		sf::Vector2f collisionPosition = sf::Vector2f(0,0);
 
 		//public fields
@@ -99,7 +99,7 @@ namespace ash
 					p_intProperties = new std::map<std::string, int>();
 					p_intProperties->insert(newProperty);
 				}
-			}
+			} break;
 			case p_float:
 			{
 				std::pair<std::string, float> newProperty(key, value);
@@ -112,7 +112,7 @@ namespace ash
 					p_floatProperties = new std::map<std::string, float>();
 					p_floatProperties->insert(newProperty);
 				}
-			}
+			}break;
 			case p_bool:
 			{
 				std::pair<std::string, bool> newProperty(key, value);
@@ -125,7 +125,7 @@ namespace ash
 					p_boolProperties = new std::map<std::string, bool>();
 					p_boolProperties->insert(newProperty);
 				}
-			}
+			}break;
 			default:
 				break;
 			}
@@ -142,11 +142,11 @@ namespace ash
 
 		//getters & setters <collision>
 		bool isColliding() const { return colliding; }
-		sf::FloatRect getCollisionSize() const { return collisionSize; }
+		sf::Vector2f getCollisionSize() const { return collisionSize; }
 		sf::Vector2f getCollisionPosition() const { return collisionPosition; }
 
 		void setColliding(bool arg) { colliding = arg; }
-		void setCollisionSize(sf::FloatRect size) { collisionSize = size; }
+		void setCollisionSize(sf::Vector2f size) { collisionSize = size; }
 		void setCollisionPosition(sf::Vector2f pos) { collisionPosition = pos; }
  	};
 };

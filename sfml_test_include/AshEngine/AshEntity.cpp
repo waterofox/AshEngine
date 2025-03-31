@@ -122,7 +122,7 @@ void AshEntity::setToDefault()
 	entity.previousPosition = sf::Vector2f(0, 0);
 
 	entity.colliding = false;
-	entity.collisionSize = sf::FloatRect(0, 0, 0, 0);
+	entity.collisionSize = sf::Vector2f(0, 0);
 	entity.collisionPosition = sf::Vector2f(0, 0);
 	
 	stopMoving();

@@ -51,6 +51,7 @@ void ash::AshCore::update()
 		AshEntity& player = getEntity("player");
 		camera.setCenter(player.getGlobalBounds().getPosition());
 	}
+	targetCollions();
 	processSignals();
 	updateTextures();
 	updateEntity();
@@ -151,10 +152,12 @@ void ash::AshCore::updateEntity()
 		for (auto& element : lay.second)
 		{
 			AshEntity& entity = element.second;
+			entity.setPreviousPosition(entity.getPosition());
 			if (areScriptsExist)
 			{
 				auto scriptIter = (*scriptsBaseIter).second.find(entity.getName());
 				if (scriptIter != (*scriptsBaseIter).second.end()) { (*scriptIter).second(this, entity); }
+
 			}
 
 			animator.updateAnimation(deltaTime, entity);
@@ -208,6 +211,44 @@ void ash::AshCore::parsProperties(const std::string& propertyName, AshEntity& en
 	}
 
 	propertieFile.close();
+}
+
+void ash::AshCore::targetCollions()
+{
+	sf::Vector2f posBuffer;
+
+	for (int i = 0; i < actualScene->size(); ++i)
+	{
+		std::map<std::string, AshEntity>& actualLay = (*actualScene)[i];
+		if (actualLay.size() == 0) { continue; }
+		for (auto& elemet : actualLay)
+		{
+			AshEntity& entity = elemet.second;
+			if (!entity.isColliding()) { continue; }
+			for (auto& elemetB : actualLay)
+			{
+				if (&elemetB == &elemet) { continue; }
+				if (!elemetB.second.isColliding()) { continue; }
+
+				AshEntity& entityB = elemetB.second;
+
+				//todo коллизия сама не скейлится. Т.е. Если я укажу спрайту scale = 2, то я должен руками заскейлить коллизию тоже. Это проблема
+				sf::FloatRect objBounds = sf::FloatRect(entity.getPosition().x + entity.getCollisionPosition().x, entity.getPosition().y + entity.getCollisionPosition().y, entity.getCollisionSize().x, entity.getCollisionSize().y);
+				sf::FloatRect objBBounds = sf::FloatRect(entityB.getPosition().x + entityB.getCollisionPosition().x, entityB.getPosition().y + entityB.getCollisionPosition().y, entityB.getCollisionSize().x, entityB.getCollisionSize().y);
+
+				if (objBounds.intersects(objBBounds))
+				{
+					posBuffer = entity.getPreviousPosition();
+					entity.setPosition(posBuffer);
+					entity.setPreviousPosition(posBuffer);
+
+					posBuffer = entityB.getPreviousPosition();
+					entityB.setPosition(posBuffer);
+					entityB.setPreviousPosition(posBuffer);
+				}
+			}
+		}
+	}
 }
 
 ash::AshCore::AshCore(const unsigned int& width, const int& height, const unsigned int& fps, const std::string& windowTitle)
@@ -344,7 +385,7 @@ void ash::AshCore::loadScene(const std::string& sceneName)
 			sceneFile >> value;
 			entityBuffer.setTextureRect(sf::IntRect(0,0,std::stof(value), 0));
 		}
-		else if (key == "ent_height:")
+		else if (key == "ent_heigth:")
 		{
 			sceneFile >> value;
 			entityBuffer.setTextureRect(sf::IntRect(0, 0, entityBuffer.getTextureRect().width, std::stof(value)));
@@ -399,6 +440,26 @@ void ash::AshCore::loadScene(const std::string& sceneName)
 				return;
 			}
 		}
+		else if (key == "col_x:")
+		{
+			sceneFile >> value;
+			entityBuffer.setCollisionPosition(sf::Vector2f(std::stof(value), 0));
+		}
+		else if (key == "col_y:")
+		{
+			sceneFile >> value;
+			entityBuffer.setCollisionPosition(sf::Vector2f(entityBuffer.getCollisionPosition().x, std::stof(value)));
+		}
+		else if (key == "col_width:")
+		{
+			sceneFile >> value;
+			entityBuffer.setCollisionSize(sf::Vector2f(std::stof(value), 0));
+		}
+		else if (key == "col_heigth:")
+		{
+			sceneFile >> value;
+			entityBuffer.setCollisionSize(sf::Vector2f(entityBuffer.getCollisionSize().x, std::stof(value)));
+			}
 		else if (key == "animated:")
 		{
 			sceneFile >> value;
