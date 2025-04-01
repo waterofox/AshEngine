@@ -1,129 +1,99 @@
 #include "AshEngine/AshCore.h"
 using namespace ash;
 
-#define playerSpeed 100
-
-void catchKeyBoardEvent(AshCore& core,sf::Keyboard::Key key, bool arg)
+struct block : public AshEntity
 {
-	AshEntity& player = core.getEntity("player");
-	switch (key)
+	sf::Vector2f realPositionOnLay;
+};
+void initBlock(block& newBlock)
+{
+	newBlock.setScale(sf::Vector2f(1, 1));
+	newBlock.setTextureRect(sf::IntRect(0, 0, 64, 64));
+	newBlock.setVisible(true);
+	newBlock.setColliding(false);
+}
+void chunkLoader(AshCore* core, const::std::string chankId)
+{
+	std::ifstream chunkData("resources/chunks/" + chankId + ".txt");
+	std::string buffer;
+	sf::Vector2f positionOfFirst;
+	sf::Vector2f positionOfPrivious;
+	int layNum = 0;
+	while (!chunkData.eof())
 	{
-	case sf::Keyboard::W: {player.moveUp = arg; }break;
-	case sf::Keyboard::A: {player.moveLeft = arg; }break;
-	case sf::Keyboard::S: {player.moveDown = arg; }break;
-	case sf::Keyboard::D:{player.moveRight = arg;}break;
-	default:
-		break;
+		++layNum;
+		chunkData >> buffer;
+		int bloksCount = std::stoi(buffer);
+		for (int i = 0; i < bloksCount; ++ i)
+		{
+			block newBlock;
+			chunkData >> buffer;
+			newBlock.setTexturePath("statickAssets/terrain/" + buffer + ".png");
+			std::string name;
+			chunkData >> buffer;
+			name += buffer + ' ';
+			newBlock.realPositionOnLay.x = std::stof(buffer);
+			chunkData >> buffer;
+			name += buffer + ' ';
+			newBlock.realPositionOnLay.y = std::stof(buffer);
+			chunkData >> buffer;
+			name += buffer;
+			
+			newBlock.setName(name);
+			initBlock(newBlock);
+
+
+			if (i == 0 and layNum == 1)
+			{
+				positionOfFirst = sf::Vector2f(newBlock.realPositionOnLay.x + 32, newBlock.realPositionOnLay.y + 16);
+				newBlock.setPosition(positionOfFirst);
+				positionOfPrivious = positionOfFirst;
+				core->pushEntity(newBlock, layNum - 1);
+				continue;
+			}
+			else if (i == 0)
+			{
+				positionOfFirst = sf::Vector2f(positionOfFirst.x - 32, positionOfFirst.y + 16);
+				newBlock.setPosition(positionOfFirst);
+				positionOfPrivious = positionOfFirst;
+				core->pushEntity(newBlock, layNum - 1);
+				continue;
+			}
+			
+			newBlock.setPosition(positionOfPrivious.x + 32, positionOfPrivious.y + 16);
+			core->pushEntity(newBlock, layNum - 1);
+			positionOfPrivious = sf::Vector2f(positionOfPrivious.x + 32, positionOfPrivious.y + 16);
+
+			
+		}
+
 	}
 }
+
 void eventHandlingFunction(AshCore& theCore)
 {
 	sf::RenderWindow& window = theCore.getWindow();
 	sf::Event& actualEvent = theCore.getActualEvent();
 	if(window.pollEvent(actualEvent))
 	{
-		AshEntity& player = theCore.getEntity("player");
+
 		switch (actualEvent.type)
 		{
 		case sf::Event::Closed: {window.close(); } break;
-		case sf::Event::KeyPressed: {catchKeyBoardEvent(theCore, actualEvent.key.code, true); } break;
-		case sf::Event::KeyReleased: {catchKeyBoardEvent(theCore, actualEvent.key.code, false); } break;
 		default:
 			break;
 		}
 	}
 }
 
-enum signals
-{
-	elka_signal_in = 1,
-	elka_signal_out = 2,
-};
-
-void testSlotIN(AshCore* core, AshEntity& senderEntity)
-{
-	AshResourceManager& manager = core->getResourceManager();
-	manager.getTexture(senderEntity.getTexturePath()).setSmooth(true);
-	senderEntity.getBool("pressed") = true;
-}
-void testSlotOUT(AshCore* core, AshEntity& senderEntity)
-{
-	AshResourceManager& manager = core->getResourceManager();
-	manager.getTexture(senderEntity.getTexturePath()).setSmooth(false);
-	senderEntity.getBool("pressed") = false;
-}
-
-
-void scriptForTetsPropertysAndSignals(AshCore* core, AshEntity& entity)
-{
-	AshEntity& player = core->getEntity("player");
-	if (entity.getGlobalBounds().intersects(player.getGlobalBounds()))
-	{
-		if (!entity.getBool("pressed")) { core->emitSignal(elka_signal_in,entity); }
-	}
-	else
-	{
-		if (entity.getBool("pressed")) { core->emitSignal(elka_signal_out, entity); }
-	}
-}
-/*
-void scriptForTetsTextureSettings(AshCore* core, AshEntity& entity)
-{
-	AshEntity& player = core->getEntity("player");
-	if (entity.getGlobalBounds().intersects(player.getGlobalBounds()))
-	{
-		sf::Texture& textureOFEntity = core->getResourceManager().getTexture(entity.getTexturePath());
-		//todo Такой способ не является безопастным, тк. это скрипт цикла. 
-		// Если вы попытаетесь манипулировать с текстурой объекта вне поля видимости, вы можете получить ошибку об ограничении прав доступа, т.к текстуры не будет существовать в памяти.
-		// НЕобходимо выполнять проверку entity.isDrawable() если да - окей, лазай ручками
-		// Если нет, то используйте метод   getSettings и манипулируйте полученным объектом. Это безопастно и при появлении объекта в поле видимости. Он приметнит ваши новые настройки.
-		textureOFEntity.setSmooth(true);
-		return;
-	}
-	if (!entity.isDrawable())
-	{
-		AshResourceManager::textureSettings& settingsToManipulate = core->getResourceManager().getSettings(entity.getTexturePath());
-		if (settingsToManipulate.smooth) { settingsToManipulate.smooth = false; }
-	}
-}
-*/
-void boxscript(AshCore* core, AshEntity& box)
-{
-	AshEntity& player = core->getEntity("player");
-	box.setPosition(player.getPosition());
-}
-void testScript(AshCore* core, AshEntity& entity)
-{
-	if (entity.moveUp)
-	{
-		entity.move(sf::Vector2f(0, -playerSpeed) * core->getDeltaTime().asSeconds());
-	}
-	if (entity.moveRight)
-	{
-		entity.move(sf::Vector2f(playerSpeed, 0) * core->getDeltaTime().asSeconds());
-	}
-	if (entity.moveDown)
-	{
-		entity.move(sf::Vector2f(0, playerSpeed) * core->getDeltaTime().asSeconds());
-	}
-	if (entity.moveLeft)
-	{
-		entity.move(sf::Vector2f(-playerSpeed,0) * core->getDeltaTime().asSeconds());
-	}
-}
-
 int main()
 {
-	AshCore engine(640, 480, 120, "AshEngineWindow");
+	AshCore engine(640, 640, 120, "AshEngineWindow");
 	engine.setEventHandlingFunction(eventHandlingFunction);
 
-	engine.addSlot("scene",elka_signal_in, testSlotIN);
-	engine.addSlot("scene", elka_signal_out, testSlotOUT);
+	engine.loadScene("blocks.txt");
 
-	engine.addScript("scene", "player", testScript);
-	engine.addScript("scene", "box2", boxscript);
-	engine.addScript("scene", "elka2", scriptForTetsPropertysAndSignals);
-	engine.loadScene("testScene.txt");
-	
+	chunkLoader(&engine, "1");
+
 	engine.startEngine();
 }

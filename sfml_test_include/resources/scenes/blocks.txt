@@ -1,0 +1,2 @@
+scene_name: blocks
+camera_type: static camera_fullscreen: true camera_x: 50 camera_y: 100 camera_width: 100 camera_height: 100

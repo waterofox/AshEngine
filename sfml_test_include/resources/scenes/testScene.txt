@@ -1,23 +1,2 @@
 scene_name: scene
 camera_type: dynamic camera_fullscreen: true camera_x: -100 camera_y: 0 camera_width: 100 camera_height: 100
-
-lay
-name: box2 ent_x: 0: ent_y: 0 ent_width: 64 ent_heigth: 64
-ent_scale_x: 2 ent_scale_y: 2 url: statickAssets/terrain/sq.png visible: true repeated: true
-collision: false 
-animated: false
-end.
-
-lay
-
-name: player ent_x: -100 ent_y: -100 ent_width: 64 ent_heigth: 64 
-ent_scale_x: 2 ent_scale_y: 2 url: animations/scene/fire.png visible: true repeated: true
-collision: true col_x: 0 col_y: 0 col_width: 128 col_heigth: 128
-animated: true frame_count: 6 fps: 12
-end.
-
-name: box ent_x: 100: ent_y: 100 ent_width: 128 ent_heigth: 64
-ent_scale_x: 2 ent_scale_y: 2 url: statickAssets/terrain/sq.png visible: true repeated: true
-collision: true col_x: 0 col_y: 0 col_width: 256 col_heigth: 128
-animated: false
-end.
